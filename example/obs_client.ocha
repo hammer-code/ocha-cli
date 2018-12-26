@@ -1,0 +1,41 @@
+class:
+  object: boto3.client
+  properties:
+    argument:
+      aws_secret_access_key:
+        value: aws_secret_access_key
+        config:
+          specified: False
+      endpoint_url:
+        value: https://s3-stage.biznetgio.net
+        config:
+          specified: True
+      region_name:
+        value: region
+        config:
+          specified: True
+      aws_access_key_id:
+        value: aws_access_key_id
+        config:
+          specified: True
+
+function:
+  name: create_bucket
+  parameters:
+    Bucket:
+      value: my-bucket
+      config:
+        specified: False
+
+output:
+  parameters:
+    status:
+      label: status
+      type: string
+      description: execute status
+    location:
+      label: Location
+      type: string
+      description: Bucket Location
+  return:
+    type: list # void, object, list
