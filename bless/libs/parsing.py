@@ -1,4 +1,4 @@
-from bless.libs import utils
+from bless.libs import utils,database
 
 
 def initialize(file=None):
@@ -45,3 +45,7 @@ def initialize(file=None):
                     else:
                         utils.create_moduls(nm_moduls,modules_data, app_path)
                         nm_modul = nm_moduls
+
+    # database setup
+    config_database = obj_data['config']['database']
+    database.database_parse(config_database,obj_data['database'])

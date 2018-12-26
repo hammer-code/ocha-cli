@@ -7,6 +7,16 @@ APP_HOME = os.path.expanduser("~")
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
+def check_keys(obj, keys):
+    chek = None
+    try:
+        chek = obj[keys]
+    except Exception:
+        return False
+    else:
+        return True
+
+
 def template_git(url, dir):
     try:
         chk_repo = os.path.isdir(dir)
@@ -78,9 +88,8 @@ def create_file_controller(nm_controller, app_path, security):
 
 
 def create_controller(nm_controller, file_controller_path, security):
-    print(security)
     sec_value = ""
-    
+
     if security == True:
         sec_value = "@jwt_required"
     

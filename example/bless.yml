@@ -1,6 +1,5 @@
 config:
   database:
-    driver: cockroach
     host: localhost
     port: 26257
     username: root
@@ -22,14 +21,14 @@ database:
     tb_userdata:
       id_userdata:
         type: serial
-        notNull: true
-        primaryKey: true
+        notNull: True
+        primaryKey: True
       first_name:
         type: varchar
-        notNull: true
+        notNull: True
       last_name:
         type: varchar
-        notNull: true
+        notNull: True
       location:
         type: varchar
       email:
@@ -38,11 +37,11 @@ database:
     tb_user:
       id_user:
         type: serial
-        notNull: true
-        primaryKey: true
+        notNull: True
+        primaryKey: True
       id_user:
         type: int
-        notNull: true
+        notNull: True
         foreignKey:
           reference: userdata
           field: id_userdata
@@ -57,8 +56,8 @@ database:
     point_test:
       id_pointest:
         type: serial
-        notNull: true
-        primaryKey: true
+        notNull: True
+        primaryKey: True
       nm_pointest:
         type: varchar
       value_pointest:
