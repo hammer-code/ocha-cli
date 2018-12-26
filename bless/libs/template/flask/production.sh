@@ -1,1 +1,0 @@
-gunicorn production:app -b 0.0.0.0:6969 -w 2

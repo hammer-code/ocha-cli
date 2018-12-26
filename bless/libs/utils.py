@@ -1,13 +1,23 @@
 import yaml
 import os
 import shutil
+import git
 
 APP_HOME = os.path.expanduser("~")
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
-def get_status():
-    pass
+def template_git(url, dir):
+    try:
+        chk_repo = os.path.isdir(dir)
+        if chk_repo:
+            shutil.rmtree(dir)
+        git.Repo.clone_from(url, dir)
+        # real_url = os.path.dirname(os.path.realpath(dir))
+        return True
+    except Exception as e:
+        return False
+
 
 
 def yaml_parser(file):
@@ -112,14 +122,24 @@ def create_app(app_name, app_framework):
     flask_path = APP_ROOT+"/template/"+app_framework
     app_path = APP_HOME+"/BLESS"
     dst_path = app_path+"/"+app_name
-
+    url_git = "https://github.com/Blesproject/bless_"+app_framework+".git"
     if not os.path.exists(app_path):
         os.makedirs(app_path)
-        copy(flask_path,dst_path)
-        return True
+        # copy(flask_path,dst_path)
+        try:
+            clone = template_git(url=url_git, dir=dst_path)
+        except Exception as e:
+            print(str(e))
+        else:
+            return True
     else:
-        copy(flask_path,dst_path)
-        return False
+        # copy(flask_path,dst_path)
+        try:
+            clone = template_git(url=url_git, dir=dst_path)
+        except Exception as e:
+            print(str(e))
+        else:
+            return False
 
 def create_routing(endpoint_obj, app_path):
     init_import = "from flask import Blueprint\nfrom flask_restful import Api \n"
