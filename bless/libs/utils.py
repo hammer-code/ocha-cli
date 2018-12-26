@@ -71,13 +71,19 @@ def create_env(data_env, app_path):
     f.close()
 
 
-def create_file_controller(nm_controller, app_path):
+def create_file_controller(nm_controller, app_path, security):
     controller_path = app_path+"/app/controllers/api"
     file_controller_path = controller_path+"/"+nm_controller+".py"
-    create_controller(nm_controller,file_controller_path)
+    create_controller(nm_controller,file_controller_path, security)
 
 
-def create_controller(nm_controller, file_controller_path):
+def create_controller(nm_controller, file_controller_path, security):
+    print(security)
+    sec_value = ""
+    
+    if security == True:
+        sec_value = "@jwt_required"
+    
     nm_ctrl = nm_controller.capitalize()
     f=open(file_controller_path, "a+")
     value_ctrl = """from flask_restful import Resource, reqparse, request
@@ -91,6 +97,7 @@ from app.helpers import endpoint_parse as ep
 import json
 
 class """+nm_ctrl+"""(Resource):
+    """+sec_value+"""
     def post(self):
         json_req = request.get_json(force=True)
         command = utils.get_command(request.path)

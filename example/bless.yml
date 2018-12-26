@@ -66,6 +66,7 @@ database:
 
 endpoint:
   point_test:
+    auth: True
     insert:
       fields:
         nm_pointest:

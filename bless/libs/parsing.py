@@ -17,9 +17,15 @@ def initialize(file=None):
     # setup endpoint
     endpoint_data = obj_data['endpoint']
     utils.set_endpoint_template(endpoint_data, app_path)
+    security = None
     for i in endpoint_data:
-        utils.create_file_controller(i, app_path)
+        try:
+            security = endpoint_data[i]['auth']
+        except Exception:
+            security = None
+        utils.create_file_controller(i, app_path, security)
 
+    # setup routing
     utils.create_routing(endpoint_data, app_path)
 
     # create moduls
