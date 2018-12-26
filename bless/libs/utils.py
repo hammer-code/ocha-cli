@@ -13,9 +13,9 @@ def template_git(url, dir):
         if chk_repo:
             shutil.rmtree(dir)
         git.Repo.clone_from(url, dir)
-        # real_url = os.path.dirname(os.path.realpath(dir))
         return True
     except Exception as e:
+        print(e)
         return False
 
 
@@ -173,6 +173,38 @@ api.add_resource(UserloginInsert, '/user/add')\n"""
     f.write(all_value)
     f.close()
 
+
+def create_moduls(moduls_name, moduls_data, app_path):
+    import_value = "from app.models import model as db\n\n\n"
+    moduls_path = app_path+"/app/moduls/"
+    file_moduls_path = moduls_path+moduls_name+".py"
+
+    f=open(file_moduls_path, "a+")
+    f.write(import_value)
+
+    for i in moduls_data:
+        function_value = """def """+moduls_data[i]['action']+"""(args):
+    # your code here
+    print(args)
+    return True\n
+    """
+        
+        f.write(function_value)
+    f.close()
+
+def add_function_moduls(moduls_name, moduls_data, app_path):
+    moduls_path = app_path+"/app/moduls/"
+    file_moduls_path = moduls_path+moduls_name+".py"
+    with open(file_moduls_path, "a") as myfile:
+        # myfile.write("appended text")
+        for i in moduls_data:
+            function_value = """
+def """+moduls_data[i]['action']+"""(args):
+    # your code here
+    print(args)
+    return True\n
+"""
+            myfile.write(function_value)
 
 
 
