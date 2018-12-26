@@ -4,7 +4,7 @@ exclude .travis.yml
 include README.md
 include setup.cfg
 include requirements.txt
-include neo/libs/templates/repo.yml
+include bless/.env
 prune .cache
 prune .git
 prune build
