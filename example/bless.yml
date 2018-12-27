@@ -33,13 +33,14 @@ database:
         type: varchar
       email:
         type: varchar
+        unique: True
 
     tb_user:
       id_user:
         type: serial
         notNull: True
         primaryKey: True
-      id_user:
+      id_userdata:
         type: int
         notNull: True
         foreignKey:
@@ -49,6 +50,7 @@ database:
           on_update: cascade
       username:
         type: varchar
+        unique: True
       password:
         type: varchar
     # default table end

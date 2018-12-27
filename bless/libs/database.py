@@ -56,9 +56,64 @@ def database_parse(config, obj_database):
                 "rules": obj_database['tables'][tables][column]
             }
             config_table.append(data_f)
+        print("QUERY "+tables+" : \n")
         create_table(tables, config_table)
+        print("________________________________________________________\n")
 
 def create_table(tables, config_table):
-    print("TABLE : ", tables)
-    print("config : ", config_table)
+    query = "CREATE TABLE "+tables
+    str_config = ""
+    pkey_config = ""
+    unique_config= ""
+    family_config = ""
+    foreign_config = ""
+
+    for k_column in config_table:
+        check_foreign = None
+        not_null = ""
+        default = ""
+        pmr_key = ""
+
+        try:
+            if k_column['rules']['notNull']:
+                not_null="NOT NULL"
+            else:
+                not_null = "NULL"
+        except Exception:
+            pass
+
+        if k_column['rules']['type']=='serial':
+            default = "DEFAULT unique_rowid()"
+        
+        try:
+            if k_column['rules']['primaryKey']:
+                pmr_key ="CONSTRAINT "+tables+"_pk PRIMARY KEY ("+k_column['column']+" ASC)"
+            else:
+                pmr_key = ""
+        except Exception:
+            pass
+
+        try:
+            if k_column['rules']['unique']:
+                unique_config +="UNIQUE INDEX "+tables+"_un ("+k_column['column']+" ASC),\n"
+            else:
+                unique_config = ""
+        except Exception:
+            pass
+        
+        try:
+            check_foreign = k_column['rules']['foreignKey']
+        except Exception:
+            check_foreign
+
+        if check_foreign:
+            foreign_config += "CONSTRAINT "+tables+"_"+k_column['rules']['foreignKey']['reference']+"_fk FOREIGN KEY ("+k_column['rules']['foreignKey']['field']+") REFERENCES "+k_column['rules']['foreignKey']['reference']+" ("+k_column['rules']['foreignKey']['field']+") ON DELETE "+k_column['rules']['foreignKey']['on_delete']+" ON UPDATE "+k_column['rules']['foreignKey']['on_update']+",\n"
+
+
+        str_config += k_column['column']+" "+k_column['rules']['type']+" "+not_null+" "+default+",\n"
+        pkey_config += pmr_key
+        family_config += k_column['column']+","
+    family_config = "FAMILY \"primary\" ("+family_config[:-1]+")"
+    query_fix = query+" (\n"+str_config+"\n"+pkey_config+",\n"+foreign_config+unique_config+"\n"+family_config+")"
+    print(query_fix)
 
