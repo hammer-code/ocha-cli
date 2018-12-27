@@ -9,7 +9,7 @@ class Generate(Base):
         Build Yaml File
         Options:
         -h --help                             Print usage
-        -f file --file=FILE                   Build yaml file
+        -f file --file=FILE                   Build bless object to microservice
     """
 
     def execute(self):

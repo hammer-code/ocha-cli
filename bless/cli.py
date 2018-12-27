@@ -1,22 +1,15 @@
 """
 Usage:
-  neo <command> [<args>...]
+  bless <command> [<args>...]
 
 Options:
-      --config string                    Location of client config
   -h, --help                             display this help and exit
   -v, --version                          Print version information and quit
 
 Commands:
-  attach      Attach local standard input, output, and error streams to a running machine
-  create      Deploying neo stack
-  login       Log in to a NEO Cloud
-  logout      Log out from a NEO Cloud
-  ls          List all stack, network, machine
-  rm          Delete stack, network, machine
-  update      Update neo stack
+  generate      Generate Bless Object
 
-Run 'neo COMMAND --help' for more information on a command.
+Run 'bless COMMAND --help' for more information on a command.
 """
 
 from inspect import getmembers, isclass
