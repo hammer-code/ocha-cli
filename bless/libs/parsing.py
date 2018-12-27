@@ -9,6 +9,7 @@ def initialize(file=None):
 
     if not utils.read_app(app_name):
         create_app = utils.create_app(app_name, app_framework)
+    
     # create environment
     app_path = utils.read_app(app_name)
     if not utils.read_file(app_path+"/.env"):

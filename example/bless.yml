@@ -3,15 +3,15 @@ config:
     host: localhost
     port: 26257
     username: root
-    name: backendless
+    name: test_bless
     ssl: disable
   app:
     host: 0.0.0.0
-    name : backendless
+    name : test_bless
     framework: flask
-    port: 8080
+    port: 6969
   redis:
-    host: 0.0.0.0
+    host: 127.0.0.1
     password: pass
     port: 6379
 
@@ -44,7 +44,7 @@ database:
         type: int
         notNull: True
         foreignKey:
-          reference: userdata
+          reference: tb_userdata
           field: id_userdata
           on_delete: cascade
           on_update: cascade

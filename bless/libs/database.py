@@ -5,7 +5,6 @@ from bless.libs import utils
 
 def check_db(qry, db, db_name):
     db.execute(qry)
-    data_set = list()
     for row in db.fetchall():
         if row[0] == db_name:
             return True
@@ -47,7 +46,7 @@ def database_setting(config):
 
 def database_parse(config, obj_database):
     db = database_setting(config)
-    data_finish = list()
+    # data_finish = list()
     for tables in obj_database['tables']:
         config_table = list()
         for column in obj_database['tables'][tables]:            
@@ -59,7 +58,9 @@ def database_parse(config, obj_database):
         print("QUERY "+tables+" : \n")
         query = create_table(tables, config_table)
         print(query)
+        execute_query(query,db)
         print("________________________________________________________\n")
+        
 
 def create_table(tables, config_table):
     query = "CREATE TABLE "+tables
@@ -120,3 +121,10 @@ def create_table(tables, config_table):
     query_fix = query+" (\n"+str_config+"\n"+pkey_config+",\n"+foreign_config+unique_config+"\n"+family_config+")"
     return query_fix
 
+
+def execute_query(query, db):
+    try:
+        db.execute(query)
+        return db
+    except (Exception, psycopg2.DatabaseError) as e:
+        raise e

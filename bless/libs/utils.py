@@ -29,7 +29,6 @@ def template_git(url, dir):
         return False
 
 
-
 def yaml_parser(file):
     with open(file, 'r') as stream:
         try:
@@ -59,6 +58,13 @@ def create_env(data_env, app_path):
     f.write("APP_NAME = "+data_env['app']['host'])
     f.write("\n")
     f.write("APP_PORT = "+str(data_env['app']['port']))
+    f.write("\n")
+    f.write("\n")
+
+    # MEMCACHE CONFIG
+    f.write("MEMCACHE_HOST = "+data_env['app']['host'])
+    f.write("\n")
+    f.write("MEMCACHE_PORT = 11211")
     f.write("\n")
     f.write("\n")
     # DATABASE CONFIG
@@ -158,7 +164,7 @@ def create_app(app_name, app_framework):
             return False
 
 def create_routing(endpoint_obj, app_path):
-    init_import = "from flask import Blueprint\nfrom flask_restful import Api \n"
+    init_import = "from flask import Blueprint\nfrom flask_restful import Api \nfrom .user import *\nfrom .auth import *\n"
     ctrl_import = ""
     for i in endpoint_obj:
         ctrl_import += "from ."+i+" import * \n"
