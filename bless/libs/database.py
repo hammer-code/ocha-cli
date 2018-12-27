@@ -57,7 +57,8 @@ def database_parse(config, obj_database):
             }
             config_table.append(data_f)
         print("QUERY "+tables+" : \n")
-        create_table(tables, config_table)
+        query = create_table(tables, config_table)
+        print(query)
         print("________________________________________________________\n")
 
 def create_table(tables, config_table):
@@ -73,7 +74,7 @@ def create_table(tables, config_table):
         not_null = ""
         default = ""
         pmr_key = ""
-
+        type_data = ""
         try:
             if k_column['rules']['notNull']:
                 not_null="NOT NULL"
@@ -84,7 +85,9 @@ def create_table(tables, config_table):
 
         if k_column['rules']['type']=='serial':
             default = "DEFAULT unique_rowid()"
-        
+            type_data = "int"
+        else:
+            type_data = k_column['rules']['type']
         try:
             if k_column['rules']['primaryKey']:
                 pmr_key ="CONSTRAINT "+tables+"_pk PRIMARY KEY ("+k_column['column']+" ASC)"
@@ -110,10 +113,10 @@ def create_table(tables, config_table):
             foreign_config += "CONSTRAINT "+tables+"_"+k_column['rules']['foreignKey']['reference']+"_fk FOREIGN KEY ("+k_column['rules']['foreignKey']['field']+") REFERENCES "+k_column['rules']['foreignKey']['reference']+" ("+k_column['rules']['foreignKey']['field']+") ON DELETE "+k_column['rules']['foreignKey']['on_delete']+" ON UPDATE "+k_column['rules']['foreignKey']['on_update']+",\n"
 
 
-        str_config += k_column['column']+" "+k_column['rules']['type']+" "+not_null+" "+default+",\n"
+        str_config += k_column['column']+" "+type_data+" "+not_null+" "+default+",\n"
         pkey_config += pmr_key
         family_config += k_column['column']+","
     family_config = "FAMILY \"primary\" ("+family_config[:-1]+")"
     query_fix = query+" (\n"+str_config+"\n"+pkey_config+",\n"+foreign_config+unique_config+"\n"+family_config+")"
-    print(query_fix)
+    return query_fix
 
