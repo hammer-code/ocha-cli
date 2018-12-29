@@ -40,6 +40,7 @@ def initialize(file=None):
                 modules_data = None
             if modules_data:
                 for nm_moduls in modules_data:
+                    print("NM_MODULS",modules_data)
                     if nm_modul == nm_moduls:
                         utils.add_function_moduls(nm_modul,modules_data, app_path)
                         nm_modul = nm_moduls

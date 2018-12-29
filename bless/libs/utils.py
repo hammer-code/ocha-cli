@@ -133,7 +133,10 @@ def read_app(app_name):
 
 
 def set_endpoint_template(endpoint_obj, app_path):
-    endpoint_value = yaml.dump(endpoint_obj)
+    endpoint_fix = {
+        "endpoint": endpoint_obj
+    }
+    endpoint_value = yaml.dump(endpoint_fix)
     template_path = app_path+"/app/static/templates/endpoint.yml"
     f=open(template_path, "a+")
     f.write(endpoint_value)
@@ -203,30 +206,129 @@ def create_moduls(moduls_name, moduls_data, app_path):
 
     f=open(file_moduls_path, "a+")
     f.write(import_value)
-
+    
+    function_value = ""
+    print("dr createmoduls nm_moduls",moduls_data)
+    print(moduls_name)
     for i in moduls_data:
-        function_value = """def """+moduls_data[i]['action']+"""(args):
+        # print(i)
+        if moduls_data[i]['action'] == 'insert':
+            function_value += """def """+moduls_data[i]['action']+"""(args):
     # your code here
-    print(args)
-    return True\n
+    table = args['table']
+    fields = args['fields']
+    try:
+        result = db.insert(table, fields)
+    except Exception as e:
+        respons = {
+            "status": False,
+            "error": str(e)
+        }
+    else:
+        respons = {
+            "status": True,
+            "messages": "Fine!",
+            "id": result
+        }
+    finally:
+        return respons\n\n
     """
-        
-        f.write(function_value)
+
+        elif moduls_data[i]['action'] == 'remove':
+            function_value += """def """+moduls_data[i]['action']+"""(args):
+    # your code here
+    table = args['table']
+    fields = ""
+    field_value = ""
+    for i in args['fields']:
+        fields = i
+        field_value = args['fields'][i]
+    try:
+        result = db.delete(table,fields,field_value)
+    except Exception as e:
+        respons = {
+            "status": False,
+            "messages": str(e)
+        }
+    else:
+        respons = {
+            "status": result,
+            "messages": "Fine Deleted!"
+        }
+    finally:
+        return respons\n\n
+    """
+        else:
+            function_value += """def """+moduls_data[i]['action']+"""(args):
+    # your code here
+        return args\n\n
+    """
+    
+    f.write(function_value)
     f.close()
 
 def add_function_moduls(moduls_name, moduls_data, app_path):
     moduls_path = app_path+"/app/moduls/"
     file_moduls_path = moduls_path+moduls_name+".py"
     with open(file_moduls_path, "a") as myfile:
-        # myfile.write("appended text")
+        function_value = ""
         for i in moduls_data:
-            function_value = """
+            # print(i)
+            if moduls_data[i]['action'] == 'insert':
+                function_value += """
 def """+moduls_data[i]['action']+"""(args):
     # your code here
-    print(args)
-    return True\n
+    table = args['table']
+    fields = args['fields']
+    try:
+        result = db.insert(table, fields)
+    except Exception as e:
+        respons = {
+            "status": False,
+            "error": str(e)
+        }
+    else:
+        respons = {
+            "status": True,
+            "messages": "Fine!",
+            "id": result
+        }
+    finally:
+        return respons\n\n
 """
-            myfile.write(function_value)
+
+            elif moduls_data[i]['action'] == 'remove':
+                function_value += """
+def """+moduls_data[i]['action']+"""(args):
+    # your code here
+    table = args['table']
+    fields = ""
+    field_value = ""
+    for i in args['fields']:
+        fields = i
+        field_value = args['fields'][i]
+    try:
+        result = db.delete(table,fields,field_value)
+    except Exception as e:
+        respons = {
+            "status": False,
+            "messages": str(e)
+        }
+    else:
+        respons = {
+            "status": result,
+            "messages": "Fine Deleted!"
+        }
+    finally:
+        return respons\n\n
+"""
+            else:
+                function_value += """
+def """+moduls_data[i]['action']+"""(args):
+    # your code here
+    return args\n\n
+"""
+        myfile.write(function_value)
 
 
 

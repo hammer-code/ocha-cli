@@ -1,10 +1,12 @@
 from bless.clis.base import Base
 from bless.libs import parsing as parse
+import os
 
 class Generate(Base): 
     """
         usage:
             generate [-f FILE]
+            generate [-g GITHUB]
 
         Build Yaml File
         Options:
@@ -13,5 +15,8 @@ class Generate(Base):
     """
 
     def execute(self):
-        parse.initialize(self.args['--file'])
-        exit()
+        if self.args['--file']:
+            parse.initialize(self.args['--file'])
+            exit()
+        if self.args['--github']:
+            pass

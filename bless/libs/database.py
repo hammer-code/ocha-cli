@@ -49,18 +49,15 @@ def database_parse(config, obj_database):
     # data_finish = list()
     for tables in obj_database['tables']:
         config_table = list()
-        for column in obj_database['tables'][tables]:            
+        for column in obj_database['tables'][tables]:
             data_f = {
                 "column": column,
                 "rules": obj_database['tables'][tables][column]
             }
             config_table.append(data_f)
-        print("QUERY "+tables+" : \n")
         query = create_table(tables, config_table)
-        print(query)
         execute_query(query,db)
-        print("________________________________________________________\n")
-        
+
 
 def create_table(tables, config_table):
     query = "CREATE TABLE "+tables

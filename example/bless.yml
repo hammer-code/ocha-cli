@@ -3,11 +3,11 @@ config:
     host: localhost
     port: 26257
     username: root
-    name: test_bless
+    name: test_bless3
     ssl: disable
   app:
     host: 0.0.0.0
-    name : test_bless
+    name : test_bless3
     framework: flask
     port: 6969
   redis:
@@ -84,19 +84,13 @@ endpoint:
           desc: Domain Variabel To Search
       moduls:
         test:
-          action: save
+          action: insert
           parameters:
             table : point_test
             fields: $fields
-            tags: $tags
-    testing:
-      tags:
-        id_ttl:
-          name: ID search
-          desc: Domain Variabel To Search
-          type: tags
+    remove:
       fields:
-        id_record:
+        id_pointest:
           name: ID search
           desc: Domain Variabel To Search
           type: tags
@@ -104,10 +98,9 @@ endpoint:
         method:
           name: methode name
           desc: Domain Variabel To Search
-      # depend: func:test:getall:id_ttl
-      # moduls:
-      #   testing:
-      #     action: getall
-      #     parameters:
-      #       id_ttl: { get_tags: id_ttl }
-      #       id_record: { get_fields: id_field }
+      moduls:
+        test:
+          action: remove
+          parameters:
+            table : point_test
+            fields: $fields
