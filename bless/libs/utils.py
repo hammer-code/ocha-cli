@@ -258,6 +258,19 @@ def create_moduls(moduls_name, moduls_data, app_path):
     finally:
         return respons\n\n
     """
+        elif moduls_data[i]['action'] == 'get':
+            function_value += """def """+moduls_data[i]['action']+"""(args):
+    # your code here
+    result = None
+    try:
+        results = db.get_all(arg['table'])
+    except Exception as e:
+        return {
+            'error': str(e)
+        }
+    else:
+        return result\n\n
+    """
         else:
             function_value += """def """+moduls_data[i]['action']+"""(args):
     # your code here
@@ -322,6 +335,20 @@ def """+moduls_data[i]['action']+"""(args):
     finally:
         return respons\n\n
 """
+            elif moduls_data[i]['action'] == 'get':
+                function_value += """
+def """+moduls_data[i]['action']+"""(args):
+    # your code here
+    result = None
+    try:
+        results = db.get_all(arg['table'])
+    except Exception as e:
+        return {
+            'error': str(e)
+        }
+    else:
+        return result\n\n
+    """
             else:
                 function_value += """
 def """+moduls_data[i]['action']+"""(args):

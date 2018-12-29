@@ -3,11 +3,11 @@ config:
     host: localhost
     port: 26257
     username: root
-    name: test_bless3
+    name: test_bless
     ssl: disable
   app:
     host: 0.0.0.0
-    name : test_bless3
+    name : test_bless
     framework: flask
     port: 6969
   redis:
@@ -104,3 +104,20 @@ endpoint:
           parameters:
             table : point_test
             fields: $fields
+
+    get:
+      fields:
+        id_pointest:
+          name: ID search
+          desc: Domain Variabel To Search
+          type: tags
+          default:
+      others:
+        method:
+          name: methode name
+          desc: Domain Variabel To Search
+      moduls:
+        test:
+          action: get
+          parameters:
+            table : point_test
