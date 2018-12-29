@@ -3,13 +3,13 @@ config:
     host: localhost
     port: 26257
     username: root
-    name: test_bless
+    name: bless1
     ssl: disable
   app:
     host: 0.0.0.0
-    name : test_bless
+    name : bless1
     framework: flask
-    port: 6969
+    port: 80
   redis:
     host: 127.0.0.1
     password: pass

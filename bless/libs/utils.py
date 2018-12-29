@@ -263,7 +263,7 @@ def create_moduls(moduls_name, moduls_data, app_path):
     # your code here
     result = None
     try:
-        results = db.get_all(arg['table'])
+        results = db.get_all(args['table'])
     except Exception as e:
         return {
             'error': str(e)
@@ -341,7 +341,7 @@ def """+moduls_data[i]['action']+"""(args):
     # your code here
     result = None
     try:
-        results = db.get_all(arg['table'])
+        results = db.get_all(args['table'])
     except Exception as e:
         return {
             'error': str(e)
