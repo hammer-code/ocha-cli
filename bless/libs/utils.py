@@ -261,7 +261,9 @@ def create_moduls(moduls_name, moduls_data, app_path):
         elif moduls_data[i]['action'] == 'get':
             function_value += """def """+moduls_data[i]['action']+"""(args):
     # your code here
-    result = None
+    col = db.get_columns(args['table'])
+    dt_types = db.get_types(args['table'])
+    results = None
     try:
         results = db.get_all(args['table'])
     except Exception as e:
@@ -269,7 +271,51 @@ def create_moduls(moduls_name, moduls_data, app_path):
             'error': str(e)
         }
     else:
-        return result\n\n
+        respons = list()
+        for i in results:
+            index = 0
+            data = dict()
+            for a in i:
+                if a in col:
+                    if dt_types[index] == 'INT':
+                        data[a]=str(i[a])
+                    else:
+                        data[a]=i[a]
+                    index += 1
+            respons.append(data)
+        return respons\n\n
+    """
+        elif moduls_data[i]['action'] == 'where':
+            function_value += """def """+moduls_data[i]['action']+"""(args):
+    # your code here
+    col = db.get_columns(args['table'])
+    dt_types = db.get_types(args['table'])
+    results = None
+    fields = ""
+    field_value = ""
+    for i in args['fields']:
+        fields = i
+        field_value = args['fields'][i]
+    try:
+        results = db.get_by_id(args['table'],fields,field_value)
+    except Exception as e:
+        return {
+            'error': str(e)
+        }
+    else:
+        respons = list()
+        for i in results:
+            index = 0
+            data = dict()
+            for a in i:
+                if a in col:
+                    if dt_types[index] == 'INT':
+                        data[a]=str(i[a])
+                    else:
+                        data[a]=i[a]
+                    index += 1
+            respons.append(data)
+        return respons\n\n
     """
         else:
             function_value += """def """+moduls_data[i]['action']+"""(args):
@@ -339,7 +385,9 @@ def """+moduls_data[i]['action']+"""(args):
                 function_value += """
 def """+moduls_data[i]['action']+"""(args):
     # your code here
-    result = None
+    col = db.get_columns(args['table'])
+    dt_types = db.get_types(args['table'])
+    results = None
     try:
         results = db.get_all(args['table'])
     except Exception as e:
@@ -347,7 +395,51 @@ def """+moduls_data[i]['action']+"""(args):
             'error': str(e)
         }
     else:
-        return result\n\n
+        respons = list()
+        for i in results:
+            index = 0
+            data = dict()
+            for a in i:
+                if a in col:
+                    if dt_types[index] == 'INT':
+                        data[a]=str(i[a])
+                    else:
+                        data[a]=i[a]
+                    index += 1
+            respons.append(data)
+        return respons\n\n
+    """
+            elif moduls_data[i]['action'] == 'where':
+                function_value += """
+def """+moduls_data[i]['action']+"""(args):
+    col = db.get_columns(args['table'])
+    dt_types = db.get_types(args['table'])
+    results = None
+    fields = ""
+    field_value = ""
+    for i in args['fields']:
+        fields = i
+        field_value = args['fields'][i]
+    try:
+        results = db.get_by_id(args['table'],fields,field_value)
+    except Exception as e:
+        return {
+            'error': str(e)
+        }
+    else:
+        respons = list()
+        for i in results:
+            index = 0
+            data = dict()
+            for a in i:
+                if a in col:
+                    if dt_types[index] == 'INT':
+                        data[a]=str(i[a])
+                    else:
+                        data[a]=i[a]
+                    index += 1
+            respons.append(data)
+        return respons\n\n
     """
             else:
                 function_value += """

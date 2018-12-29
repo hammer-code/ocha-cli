@@ -3,13 +3,13 @@ config:
     host: localhost
     port: 26257
     username: root
-    name: bless1
+    name: bless6
     ssl: disable
   app:
     host: 0.0.0.0
-    name : bless1
+    name : bless6
     framework: flask
-    port: 80
+    port: 6969
   redis:
     host: 127.0.0.1
     password: pass
@@ -67,7 +67,7 @@ database:
 
 endpoint:
   point_test:
-    auth: True
+    auth: False
     insert:
       fields:
         nm_pointest:
@@ -121,3 +121,21 @@ endpoint:
           action: get
           parameters:
             table : point_test
+
+    where:
+      fields:
+        id_pointest:
+          name: ID search
+          desc: Domain Variabel To Search
+          type: tags
+          default:
+      others:
+        method:
+          name: methode name
+          desc: Domain Variabel To Search
+      moduls:
+        test:
+          action: where
+          parameters:
+            table : point_test
+            fields: $fields
