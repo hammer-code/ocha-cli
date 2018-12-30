@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import os
 from bless.libs import utils
+from passlib.hash import pbkdf2_sha256
 
 def check_db(qry, db, db_name):
     db.execute(qry)
@@ -10,6 +11,23 @@ def check_db(qry, db, db_name):
             return True
         else:
             return False
+
+def insert(db,table, data = None):
+    value = ''
+    column = ''
+    for row in data:
+        column += row+","
+        value += "'"+str(data[row]+"',")
+    column = "("+column[:-1]+")"
+    value = "("+value[:-1]+")"
+    try:
+        db.execute("INSERT INTO "+table+" "+column+" VALUES "+value+" RETURNING *")
+    except (Exception, psycopg2.DatabaseError) as e:
+        raise e
+    else:
+        id_of_new_row = db.fetchone()[0]
+        return str(id_of_new_row)
+    
 
 def database_setting(config):
     conn = psycopg2.connect(
@@ -44,7 +62,7 @@ def database_setting(config):
     conn.set_session(autocommit=True)
     return db
 
-def database_parse(config, obj_database):
+def database_parse(config, obj_database, security, auth_config):
     db = database_setting(config)
     # data_finish = list()
     for tables in obj_database['tables']:
@@ -57,9 +75,26 @@ def database_parse(config, obj_database):
             config_table.append(data_f)
         query = create_table(tables, config_table)
         execute_query(query,db)
+    if security:
+        # inserting admin user
+        admin_userdata = {
+            'firs_tname': auth_config['user'],
+            'last_name': auth_config['user'],
+            'location': '',
+            'email': auth_config['admin'],
+        }
+        id_userdata = insert(db,'tb_userdata', admin_userdata)
+        if id_userdata:
+            password_hash = pbkdf2_sha256.hash(auth_config['password'])
+            admin_login = {
+                'id_userdata': id_userdata,
+                'username': auth_config['user'],
+                'password': password_hash
+            }
+            insert(db, 'tb_user', admin_login)
 
 
-def create_table(tables, config_table):
+def create_table(tables, config_table): 
     query = "CREATE TABLE "+tables
     str_config = ""
     pkey_config = ""

@@ -40,7 +40,6 @@ def initialize(file=None):
                 modules_data = None
             if modules_data:
                 for nm_moduls in modules_data:
-                    print("NM_MODULS",modules_data)
                     if nm_modul == nm_moduls:
                         utils.add_function_moduls(nm_modul,modules_data, app_path)
                         nm_modul = nm_moduls
@@ -50,4 +49,5 @@ def initialize(file=None):
 
     # database setup
     config_database = obj_data['config']['database']
-    database.database_parse(config_database,obj_data['database'])
+    auth_config = obj_data['auth']
+    database.database_parse(config_database,obj_data['database'], security, auth_config)

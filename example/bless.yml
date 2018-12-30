@@ -1,13 +1,18 @@
+auth:
+  user: admin
+  password: admin #change your password after create your app
+  email: admin@admin.com 
+
 config:
   database:
     host: localhost
     port: 26257
     username: root
-    name: bless6
+    name: bless7
     ssl: disable
   app:
     host: 0.0.0.0
-    name : bless6
+    name : bless7
     framework: flask
     port: 6969
   redis:
