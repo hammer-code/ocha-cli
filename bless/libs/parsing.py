@@ -14,6 +14,8 @@ def initialize(file=None):
     app_path = utils.read_app(app_name)
     if not utils.read_file(app_path+"/.env"):
         utils.create_env(obj_data['config'], app_path)
+    if not utils.read_file(app_path+"/production.sh"):
+        utils.create_production_env(obj_data['config'], app_path)
 
     # setup endpoint
     endpoint_data = obj_data['endpoint']
