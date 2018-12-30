@@ -36,7 +36,7 @@ def initialize(file=None):
             modules_data = None
             try:
                 modules_data = endpoint_data[key_i][end_i]['moduls']
-            except Exception as e:
+            except Exception:
                 modules_data = None
             if modules_data:
                 for nm_moduls in modules_data:
