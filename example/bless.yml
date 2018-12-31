@@ -15,6 +15,8 @@ config:
     name : bless7
     framework: flask
     port: 6969
+    worker: 2
+    environment: production
   redis:
     host: 127.0.0.1
     password: pass

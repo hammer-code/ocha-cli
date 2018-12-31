@@ -50,6 +50,14 @@ def read_file(file):
     else:
         return False
 
+def create_production_env(data_env,app_path):
+    host = data_env['app']['host']
+    port = data_env['app']['port']
+    f=open(app_path+"/production.sh", "a+")
+    f.write("gunicorn production:app -b "+str(host)+":"+str(port)+" -w 2")
+    f.close()
+
+
 def create_env(data_env, app_path):
     f=open(app_path+"/.env", "a+")
     # APP CONFIG

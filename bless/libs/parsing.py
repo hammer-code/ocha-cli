@@ -14,6 +14,8 @@ def initialize(file=None):
     app_path = utils.read_app(app_name)
     if not utils.read_file(app_path+"/.env"):
         utils.create_env(obj_data['config'], app_path)
+    if not utils.read_file(app_path+"/production.sh"):
+        utils.create_production_env(obj_data['config'], app_path)
 
     # setup endpoint
     endpoint_data = obj_data['endpoint']
@@ -50,4 +52,5 @@ def initialize(file=None):
     # database setup
     config_database = obj_data['config']['database']
     auth_config = obj_data['auth']
-    database.database_parse(config_database,obj_data['database'], security, auth_config)
+    if config_database['localhost'] == "localhost" or config_database['localhost'] == "127.0.0.1":
+        database.database_parse(config_database,obj_data['database'], security, auth_config)
