@@ -288,7 +288,7 @@ def create_moduls(moduls_name, moduls_data, app_path):
                     if dt_types[index] == 'INT':
                         data[a]=str(i[a])
                     else:
-                        data[a]=i[a]
+                        data[a]=str(i[a])
                     index += 1
             respons.append(data)
         return respons\n\n
@@ -320,7 +320,7 @@ def create_moduls(moduls_name, moduls_data, app_path):
                     if dt_types[index] == 'INT':
                         data[a]=str(i[a])
                     else:
-                        data[a]=i[a]
+                        data[a]=str(i[a])
                     index += 1
             respons.append(data)
         return respons\n\n
@@ -412,7 +412,7 @@ def """+moduls_data[i]['action']+"""(args):
                     if dt_types[index] == 'INT':
                         data[a]=str(i[a])
                     else:
-                        data[a]=i[a]
+                        data[a]=str(i[a])
                     index += 1
             respons.append(data)
         return respons\n\n
@@ -444,7 +444,7 @@ def """+moduls_data[i]['action']+"""(args):
                     if dt_types[index] == 'INT':
                         data[a]=str(i[a])
                     else:
-                        data[a]=i[a]
+                        data[a]=str(i[a])
                     index += 1
             respons.append(data)
         return respons\n\n
