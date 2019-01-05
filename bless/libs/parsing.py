@@ -52,5 +52,6 @@ def initialize(file=None):
     # database setup
     config_database = obj_data['config']['database']
     auth_config = obj_data['auth']
-    if config_database['localhost']['host'] == "localhost" or config_database['localhost']['host'] == "127.0.0.1":
+    print(config_database)
+    if config_database['host'] == "localhost" or config_database['host'] == "127.0.0.1":
         database.database_parse(config_database,obj_data['database'], security, auth_config)
