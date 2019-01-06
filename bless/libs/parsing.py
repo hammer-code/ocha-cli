@@ -1,17 +1,18 @@
 from bless.libs import utils,database
 
 
-def initialize(file=None):
+def initialize(file=None, path=None):
     obj_data = utils.yaml_parser(file)
     # Create APP
     app_name =  obj_data['config']['app']['name']
     app_framework =  obj_data['config']['app']['framework']
 
     if not utils.read_app(app_name):
-        create_app = utils.create_app(app_name, app_framework)
+        create_app = utils.create_app(app_name, app_framework, path=path)
     
     # create environment
-    app_path = utils.read_app(app_name)
+    app_path = utils.read_app(app_name,path=path)
+
     if not utils.read_file(app_path+"/.env"):
         utils.create_env(obj_data['config'], app_path)
     if not utils.read_file(app_path+"/production.sh"):
@@ -21,6 +22,7 @@ def initialize(file=None):
     endpoint_data = obj_data['endpoint']
     utils.set_endpoint_template(endpoint_data, app_path)
     security = None
+    
     for i in endpoint_data:
         try:
             security = endpoint_data[i]['auth']

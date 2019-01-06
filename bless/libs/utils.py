@@ -95,7 +95,7 @@ def create_env(data_env, app_path):
     f.close()
 
 
-def create_file_controller(nm_controller, app_path, security):
+def create_file_controller(nm_controller, app_path, security): 
     controller_path = app_path+"/app/controllers/api"
     file_controller_path = controller_path+"/"+nm_controller+".py"
     create_controller(nm_controller,file_controller_path, security)
@@ -132,8 +132,11 @@ class """+nm_ctrl+"""(Resource):
     f.write(value_ctrl)
     f.close()
 
-def read_app(app_name):
-    app_path = APP_HOME+"/BLESS/"+app_name
+def read_app(app_name, path=None):
+    if path is None:
+        app_path = APP_HOME+"/BLESS/"+app_name
+    else:
+        app_path = path+"/"+app_name
     if not os.path.exists(app_path):
         return None
     else:
@@ -151,11 +154,15 @@ def set_endpoint_template(endpoint_obj, app_path):
     f.close()
 
 
-def create_app(app_name, app_framework):
-    flask_path = APP_ROOT+"/template/"+app_framework
-    app_path = APP_HOME+"/BLESS"
-    dst_path = app_path+"/"+app_name
+def create_app(app_name, app_framework, path=None):
     url_git = "https://github.com/Blesproject/bless_"+app_framework+".git"
+    if path is None:
+        app_path = APP_HOME+"/BLESS"
+        dst_path = app_path+"/"+app_name
+    else:
+        app_path = path
+        dst_path = app_path+"/"+app_name
+
     if not os.path.exists(app_path):
         os.makedirs(app_path)
         # copy(flask_path,dst_path)
