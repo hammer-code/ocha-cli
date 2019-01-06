@@ -1,0 +1,4 @@
+auth:
+  user: admin
+  password: admin #change your password after create your app
+  email: admin@admin.com 
