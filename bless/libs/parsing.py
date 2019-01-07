@@ -1,4 +1,6 @@
-from bless.libs import utils,database
+from bless.libs import database
+from bless.libs import parsing_utils
+from bless.libs import utils
 
 
 def initialize(file=None, path=None):
@@ -8,19 +10,19 @@ def initialize(file=None, path=None):
     app_framework =  obj_data['config']['app']['framework']
 
     if not utils.read_app(app_name):
-        create_app = utils.create_app(app_name, app_framework, path=path)
+        create_app = parsing_utils.create_app(app_name, app_framework, path=path)
     
     # create environment
     app_path = utils.read_app(app_name,path=path)
 
     if not utils.read_file(app_path+"/.env"):
-        utils.create_env(obj_data['config'], app_path)
+        parsing_utils.create_env(obj_data['config'], app_path)
     if not utils.read_file(app_path+"/production.sh"):
-        utils.create_production_env(obj_data['config'], app_path)
+        parsing_utils.create_production_env(obj_data['config'], app_path)
 
     # setup endpoint
     endpoint_data = obj_data['endpoint']
-    utils.set_endpoint_template(endpoint_data, app_path)
+    parsing_utils.set_endpoint_template(endpoint_data, app_path)
     security = None
     
     for i in endpoint_data:
@@ -28,10 +30,10 @@ def initialize(file=None, path=None):
             security = endpoint_data[i]['auth']
         except Exception:
             security = None
-        utils.create_file_controller(i, app_path, security)
+        parsing_utils.create_file_controller(i, app_path, security)
 
     # setup routing
-    utils.create_routing(endpoint_data, app_path)
+    parsing_utils.create_routing(endpoint_data, app_path)
 
     # create moduls
     nm_modul = None
@@ -45,10 +47,10 @@ def initialize(file=None, path=None):
             if modules_data:
                 for nm_moduls in modules_data:
                     if nm_modul == nm_moduls:
-                        utils.add_function_moduls(nm_modul,modules_data, app_path)
+                        parsing_utils.add_function_moduls(nm_modul,modules_data, app_path)
                         nm_modul = nm_moduls
                     else:
-                        utils.create_moduls(nm_moduls,modules_data, app_path)
+                        parsing_utils.create_moduls(nm_moduls,modules_data, app_path)
                         nm_modul = nm_moduls
 
     # database setup
