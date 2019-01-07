@@ -37,6 +37,7 @@ def yaml_parser(stream):
     except yaml.YAMLError as exc:
         print(exc)
 
+
 def yaml_create(stream, path):
     with open(path, 'w') as outfile:
         try:
@@ -45,6 +46,17 @@ def yaml_create(stream, path):
             print(exc)
         else:
             return True
+
+
+def yaml_read(path):
+    with open(path, 'r') as outfile:
+        try:
+            data = yaml.load(outfile)
+        except yaml.YAMLError as exc:
+            print(exc)
+        else:
+            return data
+
 
 def copy(src, dest):
     try:
