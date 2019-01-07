@@ -32,6 +32,7 @@ def initialite(init, path):
     val = ""
     for i in deploy_data:
         val += utils.read_value(path+"/"+deploy_data[i]['file'])
+        val += "\n"
     utils.create_file("bless.yml",deploy_path, val)
 
 
