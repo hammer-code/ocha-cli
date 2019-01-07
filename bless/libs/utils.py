@@ -2,6 +2,7 @@ import yaml
 import os
 import shutil
 import git
+from urllib.request import urlopen
 
 APP_HOME = os.path.expanduser("~")
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -29,13 +30,21 @@ def template_git(url, dir):
         return False
 
 
-def yaml_parser(file):
-    with open(file, 'r') as stream:
+def yaml_parser(stream):
+    try:
+        data = yaml.load(stream)
+        return data
+    except yaml.YAMLError as exc:
+        print(exc)
+
+def yaml_create(stream, path):
+    with open(path, 'w') as outfile:
         try:
-            data = yaml.load(stream)
-            return data
+            yaml.dump(stream, outfile, default_flow_style=False)
         except yaml.YAMLError as exc:
             print(exc)
+        else:
+            return True
 
 def copy(src, dest):
     try:
@@ -60,6 +69,34 @@ def read_app(app_name, path=None):
     else:
         return app_path
 
+def create_file(file, path=None, value=None):
+    default_path = APP_HOME
+    if path:
+        default_path = path
+    f=open(default_path+"/"+file, "a+")
+    f.write(value)
+    f.close()
+
+    try:
+        return read_file(default_path+"/"+file)
+    except Exception as e:
+        print(e)
+
+def check_internet():
+    try:
+        urlopen("https://raw.githubusercontent.com")
+    except Exception as e:
+        print(e)
+    else:
+        return True
+
+def download(url):
+    try:
+        response = urlopen(url)
+    except Exception as e:
+        print(e)
+    else:
+        return response
 
 
 
