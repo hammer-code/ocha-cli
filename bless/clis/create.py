@@ -37,7 +37,71 @@ class Create(Base):
             check_yml = create_utils.utils.read_file(CURR_DIR+"/database.yml")
             if not check_yml:
                 if not internet:
-                    value = ""
+                    value = {
+                        "database": {
+                            "tables": {
+                                "tb_userdata": {
+                                    "id_userdata": {
+                                        "type": "serial",
+                                        "notNull": True,
+                                        "primaryKey": True
+                                    },
+                                    "first_name": {
+                                        "type": "varchar",
+                                        "notNull": True
+                                    },
+                                    "last_name": {
+                                        "type": "varchar",
+                                        "notNull": True
+                                    },
+                                    "location": {
+                                        "type": "varchar"
+                                    },
+                                    "email": {
+                                        "type": "varchar",
+                                        "unique": True
+                                    }
+                                },
+                                "tb_user": {
+                                    "id_user": {
+                                        "type": "serial",
+                                        "notNull": True,
+                                        "primaryKey": True
+                                    },
+                                    "id_userdata": {
+                                        "type": "int",
+                                        "notNull": True,
+                                        "foreignKey": {
+                                            "reference": "tb_userdata",
+                                            "field": "id_userdata",
+                                            "on_delete": "cascade",
+                                            "on_update": "cascade"
+                                        }
+                                    },
+                                    "username": {
+                                        "type": "varchar",
+                                        "unique": True
+                                    },
+                                    "password": {
+                                        "type": "varchar"
+                                    }
+                                },
+                                "point_test": {
+                                    "id_pointest": {
+                                        "type": "serial",
+                                        "notNull": True,
+                                        "primaryKey": True
+                                    },
+                                    "nm_pointest": {
+                                        "type": "varchar"
+                                    },
+                                    "value_pointest": {
+                                        "type": "varchar"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 else:
                     value = create_utils.utils.download(url_bless_object+"database.yml")
                     value = create_utils.utils.yaml_parser(value.read())
@@ -79,6 +143,72 @@ class Create(Base):
             value = None
             if not internet:
                 value = ""
+                if i == 'database':
+                    value = {
+                        "database": {
+                            "tables": {
+                                "tb_userdata": {
+                                    "id_userdata": {
+                                        "type": "serial",
+                                        "notNull": True,
+                                        "primaryKey": True
+                                    },
+                                    "first_name": {
+                                        "type": "varchar",
+                                        "notNull": True
+                                    },
+                                    "last_name": {
+                                        "type": "varchar",
+                                        "notNull": True
+                                    },
+                                    "location": {
+                                        "type": "varchar"
+                                    },
+                                    "email": {
+                                        "type": "varchar",
+                                        "unique": True
+                                    }
+                                },
+                                "tb_user": {
+                                    "id_user": {
+                                        "type": "serial",
+                                        "notNull": True,
+                                        "primaryKey": True
+                                    },
+                                    "id_userdata": {
+                                        "type": "int",
+                                        "notNull": True,
+                                        "foreignKey": {
+                                            "reference": "tb_userdata",
+                                            "field": "id_userdata",
+                                            "on_delete": "cascade",
+                                            "on_update": "cascade"
+                                        }
+                                    },
+                                    "username": {
+                                        "type": "varchar",
+                                        "unique": True
+                                    },
+                                    "password": {
+                                        "type": "varchar"
+                                    }
+                                },
+                                "point_test": {
+                                    "id_pointest": {
+                                        "type": "serial",
+                                        "notNull": True,
+                                        "primaryKey": True
+                                    },
+                                    "nm_pointest": {
+                                        "type": "varchar"
+                                    },
+                                    "value_pointest": {
+                                        "type": "varchar"
+                                    }
+                                }
+                            }
+                        }
+                    }
             else:
                 value = create_utils.utils.download(url_bless_object+"/"+i+".yml")
                 value = create_utils.utils.yaml_parser(value.read())
