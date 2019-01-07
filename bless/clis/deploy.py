@@ -1,37 +1,38 @@
 from bless.clis.base import Base
-from bless.libs import parsing as parse
+from bless.libs import deploy_utils
 import os
 
+
+CURR_DIR = os.getcwd()
 
 class Deploy(Base):
     """
         usage:
-            deploy database
-            deploy auth
-            deploy config
-            deploy endpoint
+            deploy
+            deploy [-s SEQUENCE]
 
-        Deploy Project 
+        Deploy Project
 
         Commands :
-        database                              Create Database Object
-        auth                                  Create Auth Object
-        config                                Create Config Object
-        endpoint                              Create Endpoint Object
 
         Options:
         -h --help                             Print usage
+        -s sequence --sequence=SEQUENCE       sequence execute object
     """
 
     def execute(self):
-        if self.args['database']:
-            print("database")
+        if self.args['--sequence']:
+            execute_arg = self.args['--sequence']
+            print(execute_arg)
             exit()
-        if self.args['auth']:
-            print("auth")
-            exit()
-        if self.args['config']:
-            print("Config")
-            exit()
-        if self.args['endpoint']:
-            print("Endpoint")
+        init_create = dict()
+        init_yml = dict()
+        if not deploy_utils.check_init(CURR_DIR):
+            list_dir = deploy_utils.list_dir(CURR_DIR)
+            for i in list_dir:
+                index = i['index'].split(".")
+                init_create[index[0]] = {
+                    "file": i['index']
+                }
+            init_yml['deploy'] = init_create
+            deploy_utils.utils.yaml_create(init_yml,CURR_DIR+"/init.yml")
