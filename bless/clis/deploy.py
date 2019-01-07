@@ -1,21 +1,17 @@
 from bless.clis.base import Base
 from bless.libs import parsing as parse
-from bless.libs import utils
 import os
 
 
-CURR_DIR = os.getcwd()
-
-
-class Create(Base):
+class Deploy(Base):
     """
         usage:
-            create database
-            create auth
-            create config
-            create endpoint
+            deploy database
+            deploy auth
+            deploy config
+            deploy endpoint
 
-        Build Yaml File
+        Deploy Project 
 
         Commands :
         database                              Create Database Object
@@ -29,9 +25,7 @@ class Create(Base):
 
     def execute(self):
         if self.args['database']:
-            check_yml = utils.read_file(CURR_DIR+"/database.yml")
-            if not check_yml:
-                pass
+            print("database")
             exit()
         if self.args['auth']:
             print("auth")
