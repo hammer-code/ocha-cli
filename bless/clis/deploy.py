@@ -23,10 +23,10 @@ class Deploy(Base):
     def execute(self):
         if self.args['--sequence']:
             execute_arg = self.args['--sequence']
-            print(execute_arg)
             exit()
         init_create = dict()
         init_yml = dict()
+        init_file = None
         if not deploy_utils.check_init(CURR_DIR):
             list_dir = deploy_utils.list_dir(CURR_DIR)
             for i in list_dir:
@@ -36,3 +36,8 @@ class Deploy(Base):
                 }
             init_yml['deploy'] = init_create
             deploy_utils.utils.yaml_create(init_yml,CURR_DIR+"/init.yml")
+            init_file = deploy_utils.utils.yaml_read(CURR_DIR+"/init.yml")
+        else:
+            init_file = deploy_utils.utils.yaml_read(CURR_DIR+"/init.yml")
+        deploy_utils.initialite(init_file, CURR_DIR)
+        deploy_utils.deploy(CURR_DIR)

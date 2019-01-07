@@ -4,7 +4,7 @@ from bless.libs import utils
 
 
 def initialize(file=None, path=None):
-    obj_data = utils.yaml_parser(file)
+    obj_data = utils.yaml_read(file)
     # Create APP
     app_name =  obj_data['config']['app']['name']
     app_framework =  obj_data['config']['app']['framework']

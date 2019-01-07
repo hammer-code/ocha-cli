@@ -47,6 +47,15 @@ def yaml_create(stream, path):
         else:
             return True
 
+def yaml_writeln(stream, path):
+    with open(path, '+a') as outfile:
+        try:
+            yaml.dump(stream, outfile, default_flow_style=False)
+        except yaml.YAMLError as exc:
+            print(exc)
+        else:
+            return True
+
 
 def yaml_read(path):
     with open(path, 'r') as outfile:
@@ -109,6 +118,20 @@ def download(url):
         print(e)
     else:
         return response
+
+
+def check_folder(path):
+    return os.path.isdir(path)
+
+def create_folder(path):
+    return os.makedirs(path)
+
+def remove_folder(path):
+    return shutil.rmtree(path)
+
+def read_value(file):
+    value = open(file)
+    return value.read()
 
 
 
