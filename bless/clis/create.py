@@ -85,19 +85,6 @@ class Create(Base):
                                     "password": {
                                         "type": "varchar"
                                     }
-                                },
-                                "point_test": {
-                                    "id_pointest": {
-                                        "type": "serial",
-                                        "notNull": True,
-                                        "primaryKey": True
-                                    },
-                                    "nm_pointest": {
-                                        "type": "varchar"
-                                    },
-                                    "value_pointest": {
-                                        "type": "varchar"
-                                    }
                                 }
                             }
                         }
@@ -139,8 +126,9 @@ class Create(Base):
             exit()
         
         all_project = ['database','auth','config','endpoint']
+       
         for i in all_project:
-            value = None
+            value_fix = ""
             if not internet:
                 value = ""
                 if i == 'database':
@@ -192,25 +180,14 @@ class Create(Base):
                                     "password": {
                                         "type": "varchar"
                                     }
-                                },
-                                "point_test": {
-                                    "id_pointest": {
-                                        "type": "serial",
-                                        "notNull": True,
-                                        "primaryKey": True
-                                    },
-                                    "nm_pointest": {
-                                        "type": "varchar"
-                                    },
-                                    "value_pointest": {
-                                        "type": "varchar"
-                                    }
                                 }
                             }
                         }
                     }
             else:
                 value = create_utils.utils.download(url_bless_object+"/"+i+".yml")
-                value = create_utils.utils.yaml_parser(value.read())
-            file = create_utils.utils.yaml_create(value,CURR_DIR+"/"+i+".yml")
+                # value = create_utils.utils.yaml_parser(value.read())
+                # print(type(value.read()))
+                value_fix = value.read().decode('utf-8')
+            file = create_utils.utils.create_file(i+".yml",CURR_DIR,value_fix)
         exit()
