@@ -15,7 +15,7 @@ def create_env(data_env, app_path):
     # APP CONFIG
     f.write("APP_NAME = "+data_env['app']['name'])
     f.write("\n")
-    f.write("APP_NAME = "+data_env['app']['host'])
+    f.write("APP_HOST = "+data_env['app']['host'])
     f.write("\n")
     f.write("APP_PORT = "+str(data_env['app']['port']))
     f.write("\n")
@@ -37,6 +37,8 @@ def create_env(data_env, app_path):
     f.write("DB_USER = "+data_env['database']['username'])
     f.write("\n")
     f.write("DB_SSL = "+data_env['database']['ssl'])
+    f.write("\n")
+    f.write("DB_DRIVER = "+data_env['database']['driver'])
     f.write("\n")
     f.write("\n")
     # REDIS CONFIG

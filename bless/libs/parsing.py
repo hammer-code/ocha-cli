@@ -1,6 +1,8 @@
 from bless.libs import database
 from bless.libs import parsing_utils
 from bless.libs import utils
+from .setting import database_setting
+from os import rename, remove
 
 
 def initialize(file=None, path=None):
@@ -11,9 +13,20 @@ def initialize(file=None, path=None):
 
     if not utils.read_app(app_name):
         create_app = parsing_utils.create_app(app_name, app_framework, path=path)
+
+    app_path = utils.read_app(app_name, path=path)
     
+    # Set App Constructor
+    driver_var = obj_data['config']['database']['driver']
+    driver_setting = database_setting['driver'][driver_var]
+    init_src = app_path+"/app/"+driver_setting['constructor']
+    init_dst = app_path+"/app/__init__.py"
+    rename(init_src , init_dst)
+    for driver_key in database_setting['driver']:
+        if driver_key != driver_setting:
+            remove(app_path+"/app/"+driver_key['constructor'])
     # create environment
-    app_path = utils.read_app(app_name,path=path)
+    
 
     if not utils.read_file(app_path+"/.env"):
         parsing_utils.create_env(obj_data['config'], app_path)
