@@ -34,11 +34,11 @@ class RunTests(Command):
 setup(
     name='bless',
     version=__version__,
-    description='A Neo command line tools',
+    description='Smart Microservice Generator On Python',
     long_description=long_description,
-    url='https://github.com/BiznetGIO',
-    author='BiznetGio',
-    author_email='support@biznetgio.com',
+    url='https://github.com/blesproject',
+    author='Sofyan Saputra',
+    author_email='sofyan@biznetgio.com',
     license='MIT',
     classifiers=[
         'Intended Audience :: Developers', 'Topic :: Utilities',
