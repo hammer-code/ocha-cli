@@ -36,8 +36,8 @@ def initialize(file=None, path=None):
             if driver_key != driver_var:
                 try:
                     remove(app_path+"/app/"+ database_setting['driver'][driver_key]['constructor'])
-                except Exception as e:
-                    print(e)
+                except Exception:
+                    pass
 
     # create environment
     if not utils.read_file(app_path+"/.env"):
@@ -83,7 +83,4 @@ def initialize(file=None, path=None):
     auth_config = obj_data['auth']
     if config_database['host'] == "localhost" or config_database['host'] == "127.0.0.1":
         database.database_parse(config_database,obj_data['database'], security, auth_config)
-
-    # execute project
-
     return app_path

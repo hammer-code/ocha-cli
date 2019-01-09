@@ -13,8 +13,6 @@ class Run(Base):
 
         Run Project
 
-        Commands :
-
         Options:
         -h --help                             Print usage
         -p path --path=PATH                   Build to own path

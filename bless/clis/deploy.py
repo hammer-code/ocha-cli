@@ -12,8 +12,6 @@ class Build(Base):
 
         Build Project
 
-        Commands :
-
         Options:
         -h --help                             Print usage
         -S server --server=SERVER       sequence execute object

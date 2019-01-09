@@ -13,8 +13,6 @@ class Build(Base):
 
         Build Project
 
-        Commands :
-
         Options:
         -h --help                             Print usage
         -s sequence --sequence=SEQUENCE       sequence execute object

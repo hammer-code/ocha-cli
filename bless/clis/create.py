@@ -20,10 +20,10 @@ class Create(Base):
         Build Yaml File
 
         Commands :
-        database                              Create Database Object
-        auth                                  Create Auth Object
-        config                                Create Config Object
-        endpoint                              Create Endpoint Object
+            database                              Create Database Object
+            auth                                  Create Auth Object
+            config                                Create Config Object
+            endpoint                              Create Endpoint Object
 
         Options:
         -h --help                             Print usage

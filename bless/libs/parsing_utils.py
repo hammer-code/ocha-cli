@@ -28,10 +28,8 @@ def create_env(data_env, app_path):
         
         if env_check == 'production':
             env_sett = "False"
-            print("ENV: ",env_sett)
         else:
             env_sett = "True"
-            print("ENV: ",env_sett)
 
     f=open(app_path+"/.env", "a+")
     # APP CONFIG
