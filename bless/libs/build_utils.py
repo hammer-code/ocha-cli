@@ -39,7 +39,6 @@ def initialite(init, path):
 def build(path):
     deploy_path = path+"/.deploy"
     path_bless = deploy_path+"/bless.yml"
-    # print(utils.read_file(path_bless))
     app_path = parse.initialize(path_bless)
     run_path = {
         "source_path": "",

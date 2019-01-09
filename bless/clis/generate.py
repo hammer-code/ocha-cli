@@ -8,7 +8,10 @@ class Generate(Base):
             generate [-f FILE]
             generate [-g GITHUB]
 
+        Commands :
+            generate
         Build Yaml File
+
         Options:
         -h --help                             Print usage
         -f file --file=FILE                   Build bless object to microservice

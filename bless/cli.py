@@ -7,7 +7,11 @@ Options:
   -v, --version                          Print version information and quit
 
 Commands:
+  build         Build Bless Project
+  create        Create Bless Project
+  deploy        Deploy Bless Project To Server
   generate      Generate Bless Object
+  run           Run Your Project
 
 Run 'bless COMMAND --help' for more information on a command.
 """
