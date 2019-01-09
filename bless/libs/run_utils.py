@@ -11,5 +11,4 @@ def execute_project(cfg_object, build_yml, path=None):
         os.system("pwd")
         os.system("bash "+build_path+"/production.sh")
     else:
-        os.system("virtualenv -p python3 "+build_path+"/env")
-        os.system("source "+build_path+"/env/bin/activate")
+        os.system("python "+build_path+"/manage.py server")
