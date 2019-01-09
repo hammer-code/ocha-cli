@@ -20,6 +20,7 @@ def initialize(file=None, path=None):
         create_app = parsing_utils.create_app(app_name, app_framework, path=path)
 
     # Set App Constructor
+    app_path = utils.read_app(app_name, path=path)
     driver_var = None
     try:
         driver_var = obj_data['config']['database']['driver']
@@ -32,8 +33,11 @@ def initialize(file=None, path=None):
         init_dst = app_path+"/app/__init__.py"
         rename(init_src , init_dst)
         for driver_key in database_setting['driver']:
-            if driver_key != driver_setting:
-                remove(app_path+"/app/"+driver_key['constructor'])
+            if driver_key != driver_var:
+                try:
+                    remove(app_path+"/app/"+ database_setting['driver'][driver_key]['constructor'])
+                except Exception as e:
+                    print(e)
 
     # create environment
     if not utils.read_file(app_path+"/.env"):

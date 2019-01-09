@@ -2,10 +2,6 @@ from bless.libs import utils
 import os, yaml
 
 
-def execute_project(app_name, app_env, path=None):
-    pass
-
-
 def create_production_env(data_env, app_path):
     host = data_env['app']['host']
     port = data_env['app']['port']
