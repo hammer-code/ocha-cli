@@ -2,6 +2,10 @@ from bless.libs import utils
 import os, yaml
 
 
+def execute_project(app_name, app_env, path=None):
+    pass
+
+
 def create_production_env(data_env, app_path):
     host = data_env['app']['host']
     port = data_env['app']['port']
@@ -11,6 +15,12 @@ def create_production_env(data_env, app_path):
 
 
 def create_env(data_env, app_path):
+    db_driver = None
+    try:
+        db_driver = data_env['database']['driver']
+    except Exception:
+        db_driver = "cockroachdb"
+
     f=open(app_path+"/.env", "a+")
     # APP CONFIG
     f.write("APP_NAME = "+data_env['app']['name'])
@@ -38,7 +48,7 @@ def create_env(data_env, app_path):
     f.write("\n")
     f.write("DB_SSL = "+data_env['database']['ssl'])
     f.write("\n")
-    f.write("DB_DRIVER = "+data_env['database']['driver'])
+    f.write("DB_DRIVER = "+db_driver)
     f.write("\n")
     f.write("\n")
     # REDIS CONFIG
@@ -177,10 +187,8 @@ def create_moduls(moduls_name, moduls_data, app_path):
     f.write(import_value)
     
     function_value = ""
-    print("dr createmoduls nm_moduls",moduls_data)
-    print(moduls_name)
+    print("Moduls Create: ",moduls_name)
     for i in moduls_data:
-        # print(i)
         if moduls_data[i]['action'] == 'insert':
             function_value += """def """+moduls_data[i]['action']+"""(args):
     # your code here
