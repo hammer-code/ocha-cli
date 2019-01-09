@@ -47,19 +47,49 @@ def database_setting(config):
             host=config['host']
         )
     else:
+        db_check = None
         try:
             db.execute("CREATE DATABASE "+config['name'])
         except (Exception, psycopg2.DatabaseError) as e:
-            raise e
-        conn = psycopg2.connect(
-            database=config['name'],
-            user=config['username'],
-            sslmode=config['ssl'],
-            port=config['port'],
-            host=config['host']
-        )
+            print(e)
+            db_check = True
+
+        if db_check:
+            conn = psycopg2.connect(
+                database=config['name'],
+                user=config['username'],
+                sslmode=config['ssl'],
+                port=config['port'],
+                host=config['host']
+            )
+            db = conn.cursor()
+            conn.set_session(autocommit=True)
+            try:
+                db.execute("SHOW TABLES")
+            except (Exception, psycopg2.DatabaseError) as e:
+                print(e)
+            else:
+                data = db.fetchall()
+                print("removing tables")
+                for i in data:
+                    qry = None
+                    qry = "DROP TABLE "+i[0]
+                    try:
+                        db.execute(qry)
+                    except (Exception, psycopg2.DatabaseError) as e:
+                        raise e
+        else:
+            conn = psycopg2.connect(
+                database=config['name'],
+                user=config['username'],
+                sslmode=config['ssl'],
+                port=config['port'],
+                host=config['host']
+            )
+
     db = conn.cursor()
     conn.set_session(autocommit=True)
+
     return db
 
 def database_parse(config, obj_database, security, auth_config):

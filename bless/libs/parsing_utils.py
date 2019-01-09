@@ -6,18 +6,42 @@ def create_production_env(data_env, app_path):
     host = data_env['app']['host']
     port = data_env['app']['port']
     f=open(app_path+"/production.sh", "a+")
-    f.write("gunicorn production:app -b "+str(host)+":"+str(port)+" -w 2")
+    f.write("gunicorn production:app -b "+str(host)+":"+str(port)+" -w 2 --chdir "+app_path+"/")
     f.close()
 
 
 def create_env(data_env, app_path):
+    db_driver = None
+    try:
+        db_driver = data_env['database']['driver']
+    except Exception:
+        db_driver = "cockroachdb"
+
+    env_check = None
+    try:
+        env_check = data_env['app']['environment']
+    except Exception as e:
+        print(e)
+
+    env_sett = ""
+    if env_check:
+        
+        if env_check == 'production':
+            env_sett = "False"
+            print("ENV: ",env_sett)
+        else:
+            env_sett = "True"
+            print("ENV: ",env_sett)
+
     f=open(app_path+"/.env", "a+")
     # APP CONFIG
     f.write("APP_NAME = "+data_env['app']['name'])
     f.write("\n")
-    f.write("APP_NAME = "+data_env['app']['host'])
+    f.write("APP_HOST = "+data_env['app']['host'])
     f.write("\n")
     f.write("APP_PORT = "+str(data_env['app']['port']))
+    f.write("\n")
+    f.write("FLASK_DEBUG = "+env_sett)
     f.write("\n")
     f.write("\n")
 
@@ -37,6 +61,8 @@ def create_env(data_env, app_path):
     f.write("DB_USER = "+data_env['database']['username'])
     f.write("\n")
     f.write("DB_SSL = "+data_env['database']['ssl'])
+    f.write("\n")
+    f.write("DB_DRIVER = "+db_driver)
     f.write("\n")
     f.write("\n")
     # REDIS CONFIG
@@ -175,10 +201,8 @@ def create_moduls(moduls_name, moduls_data, app_path):
     f.write(import_value)
     
     function_value = ""
-    print("dr createmoduls nm_moduls",moduls_data)
-    print(moduls_name)
+    print("Moduls Create: ",moduls_name)
     for i in moduls_data:
-        # print(i)
         if moduls_data[i]['action'] == 'insert':
             function_value += """def """+moduls_data[i]['action']+"""(args):
     # your code here
