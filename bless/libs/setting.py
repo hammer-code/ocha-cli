@@ -22,7 +22,7 @@ database_setting = {
             }
         },
         "postgresql": {
-            "constructor": "__init__.py.mysql",
+            "constructor": "__init__.py.postgresql",
             "package": {
                 "name": "psycopg2",
                 "tools": "pip"

@@ -25,9 +25,8 @@ def initialize(file=None, path=None):
     for driver_key in database_setting['driver']:
         if driver_key != driver_setting:
             remove(app_path+"/app/"+driver_key['constructor'])
-    # create environment
-    
 
+    # create environment
     if not utils.read_file(app_path+"/.env"):
         parsing_utils.create_env(obj_data['config'], app_path)
     if not utils.read_file(app_path+"/production.sh"):
