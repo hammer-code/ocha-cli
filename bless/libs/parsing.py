@@ -85,3 +85,5 @@ def initialize(file=None, path=None):
         database.database_parse(config_database,obj_data['database'], security, auth_config)
 
     # execute project
+
+    return app_path

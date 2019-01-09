@@ -6,7 +6,7 @@ def create_production_env(data_env, app_path):
     host = data_env['app']['host']
     port = data_env['app']['port']
     f=open(app_path+"/production.sh", "a+")
-    f.write("gunicorn production:app -b "+str(host)+":"+str(port)+" -w 2")
+    f.write("gunicorn production:app -b "+str(host)+":"+str(port)+" -w 2 --chdir "+app_path+"/")
     f.close()
 
 
@@ -17,6 +17,22 @@ def create_env(data_env, app_path):
     except Exception:
         db_driver = "cockroachdb"
 
+    env_check = None
+    try:
+        env_check = data_env['app']['environment']
+    except Exception as e:
+        print(e)
+
+    env_sett = ""
+    if env_check:
+        
+        if env_check == 'production':
+            env_sett = "False"
+            print("ENV: ",env_sett)
+        else:
+            env_sett = "True"
+            print("ENV: ",env_sett)
+
     f=open(app_path+"/.env", "a+")
     # APP CONFIG
     f.write("APP_NAME = "+data_env['app']['name'])
@@ -24,6 +40,8 @@ def create_env(data_env, app_path):
     f.write("APP_HOST = "+data_env['app']['host'])
     f.write("\n")
     f.write("APP_PORT = "+str(data_env['app']['port']))
+    f.write("\n")
+    f.write("FLASK_DEBUG = "+env_sett)
     f.write("\n")
     f.write("\n")
 
