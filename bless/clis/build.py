@@ -40,4 +40,4 @@ class Build(Base):
         else:
             init_file = build_utils.utils.yaml_read(CURR_DIR+"/init.yml")
         build_utils.initialite(init_file, CURR_DIR)
-        build_utils.deploy(CURR_DIR)
+        build_utils.build(CURR_DIR)

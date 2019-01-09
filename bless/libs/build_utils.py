@@ -36,8 +36,13 @@ def initialite(init, path):
     utils.create_file("bless.yml",deploy_path, val)
 
 
-def deploy(path):
+def build(path):
     deploy_path = path+"/.deploy"
     path_bless = deploy_path+"/bless.yml"
     # print(utils.read_file(path_bless))
-    parse.initialize(path_bless)
+    app_path = parse.initialize(path_bless)
+    run_path = {
+        "source_path": "",
+        "build_path": app_path
+    }
+    utils.yaml_writeln(run_path,deploy_path+"/build.yml")
