@@ -27,7 +27,7 @@ def insert(db,table, data = None):
     else:
         id_of_new_row = db.fetchone()[0]
         return str(id_of_new_row)
-    
+
 
 def database_setting(config):
     conn = psycopg2.connect(

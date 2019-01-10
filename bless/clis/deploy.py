@@ -1,13 +1,15 @@
 from bless.clis.base import Base
+from bless.libs import deploy_utils
 import os
 
 
 CURR_DIR = os.getcwd()
 
-class Build(Base):
+class Deploy(Base):
     """
         usage:
             deploy
+            deploy docker
             deploy [-S server]
 
         Build Project
@@ -18,4 +20,5 @@ class Build(Base):
     """
 
     def execute(self):
-        print(self.args)
+        if self.args['docker']:
+            deploy_utils.docker_deploy()
