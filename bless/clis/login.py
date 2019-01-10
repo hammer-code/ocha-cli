@@ -17,4 +17,4 @@ class Login(Base):
     """
 
     def execute(self):
-        print("LOGIN")
+        login_utils.login("user","pass")

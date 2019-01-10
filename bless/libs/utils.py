@@ -134,28 +134,14 @@ def read_value(file):
     value = open(file)
     return value.read()
 
+
 # for login deploy
 def check_env():
     return os.path.isfile("{}/.bless.env".format(APP_HOME))
 
 
-def create_env_file(username, password, project_id,
-                    auth_url, user_domain_name):
-    try:
-        env_file = open("{}/.neo.env".format(APP_HOME), "w+")
-        env_file.write("OS_USERNAME=%s\n" % username)
-        env_file.write("OS_PASSWORD=%s\n" % password)
-        env_file.write("OS_AUTH_URL=%s\n" % auth_url)
-        env_file.close()
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-
 def load_env_file():
-    return load_dotenv("{}/.neo.env".format(APP_HOME), override=True)
-
+    return load_dotenv("{}/.bless.env".format(APP_HOME), override=True)
 
 def get_env_values():
     if check_env():
@@ -167,17 +153,6 @@ def get_env_values():
         return neo_env
     else:
         print("Can't find bless.env")
-
-
-def is_current_env(auth_url, user_domain_name, username):
-    """ check if auth_url and user_domain_name differ from current .neo.env"""
-    envs = get_env_values()
-    if (envs['auth_url'] == auth_url and
-        envs['user_domain_name'] == user_domain_name and
-            envs['username'] == username):
-        return True
-    else:
-        return False
 
 
 
