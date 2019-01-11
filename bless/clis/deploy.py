@@ -10,6 +10,7 @@ class Deploy(Base):
         usage:
             deploy
             deploy docker
+            deploy neo
             deploy [-S server]
 
         Build Project
@@ -22,3 +23,6 @@ class Deploy(Base):
     def execute(self):
         if self.args['docker']:
             deploy_utils.docker_deploy()
+        if self.args['neo']:
+            bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.yml")
+            deploy_utils.neo_deploy(bless_object,CURR_DIR)

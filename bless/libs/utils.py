@@ -2,6 +2,7 @@ import yaml
 import os
 import shutil
 import git
+import requests
 from dotenv import load_dotenv
 from urllib.request import urlopen
 
@@ -112,6 +113,7 @@ def check_internet():
     else:
         return True
 
+
 def download(url):
     try:
         response = urlopen(url)
@@ -124,11 +126,14 @@ def download(url):
 def check_folder(path):
     return os.path.isdir(path)
 
+
 def create_folder(path):
     return os.makedirs(path)
 
+
 def remove_folder(path):
     return shutil.rmtree(path)
+
 
 def read_value(file):
     value = open(file)
@@ -146,13 +151,21 @@ def load_env_file():
 def get_env_values():
     if check_env():
         load_env_file()
-        neo_env = {}
-        neo_env['username'] = os.environ.get('OS_USERNAME')
-        neo_env['password'] = os.environ.get('OS_PASSWORD')
-        neo_env['auth_url'] = os.environ.get('OS_AUTH_URL')
-        return neo_env
+        bless_env = {}
+        bless_env['username'] = os.environ.get('OS_USERNAME')
+        bless_env['password'] = os.environ.get('OS_PASSWORD')
+        bless_env['auth_url'] = os.environ.get('OS_AUTH_URL')
+        return bless_env
     else:
         print("Can't find bless.env")
+
+def sign_to_project(url, username, password):
+    post_data = {
+        "username": username,
+        "password": password
+    }
+
+    return ""
 
 
 

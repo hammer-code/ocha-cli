@@ -1,4 +1,7 @@
 import docker, requests
+from passlib.hash import pbkdf2_sha256
+from bless.libs import utils
+from getpass import getpass
 
 
 # deploying in docker
@@ -14,8 +17,29 @@ def docker_deploy():
 
 # Deploying in neo service
 def neo_deploy(bless_object, app_path):
-    files = {'upload_file': open('file.txt','rb')}
-    values = {'DB': 'photcat', 'OUT': 'csv', 'SHORT': 'short'}
-    url = ""
-    r = requests.post(url, files=files, data=values)
+    env_data = utils.get_env_values()
+    password = getpass("Your Neo Password: ")
+    password_unhash = pbkdf2_sha256.verify(password, env_data['password'])
+    head_url = env_data['OS_PROJECT_URL']+":"+env_data['OS_PROJECT_PORT']
+    auth = None
+    if not password_unhash:
+        print("Password Wrong")
+        exit()
+    else:
+        url_login = head_url+"/api/sign"
+        auth = utils.sign_to_project(url_login,env_data['username'], password) 
+
+    files = {'bless_file': open(app_path+"/.deploy/bless.yml",'rb')}
+    
+    
+    headers = {
+        "Authorization": auth
+    }
+    values = {
+        'app_name': bless_object['config']['app']['name'],
+        'app_port': bless_object['config']['app']['port'],
+        'username': env_data['username'],
+    }
+    
+    r = requests.post(head_url+"/api/project", files=files, data=values, headers=headers)
     return r
