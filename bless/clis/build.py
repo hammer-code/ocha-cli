@@ -19,8 +19,9 @@ class Build(Base):
     """
 
     def execute(self):
-        if self.args['--sequence']:
+        if self.args['--sequence'] == 'database':
             execute_arg = self.args['--sequence']
+            print(execute_arg)
             exit()
         init_create = dict()
         init_yml = dict()

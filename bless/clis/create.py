@@ -91,7 +91,7 @@ class Create(Base):
                     }
                 else:
                     value = create_utils.utils.download(url_bless_object+"database.yml")
-                    value = create_utils.utils.yaml_parser(value.read())
+                    value = value.read().decode('utf-8')
                 file = create_utils.utils.yaml_create(value,CURR_DIR+"/database.yml")
             exit()
         if self.args['auth']:
@@ -101,7 +101,7 @@ class Create(Base):
                     value = ""
                 else:
                     value = create_utils.utils.download(url_bless_object+"auth.yml")
-                    value = create_utils.utils.yaml_parser(value.read())
+                    value = value.read().decode('utf-8')
                 file = create_utils.utils.yaml_create(value,CURR_DIR+"/auth.yml")
             exit()
         if self.args['config']:
@@ -111,9 +111,10 @@ class Create(Base):
                     value = ""
                 else:
                     value = create_utils.utils.download(url_bless_object+"config.yml")
-                    value = create_utils.utils.yaml_parser(value.read())
+                    value = value.read().decode('utf-8')
                 file = create_utils.utils.yaml_create(value,CURR_DIR+"/config.yml")
             exit()
+
         if self.args['endpoint']:
             check_yml = create_utils.utils.read_file(CURR_DIR+"/endpoint.yml")
             if not check_yml:
@@ -121,7 +122,7 @@ class Create(Base):
                     value = ""
                 else:
                     value = create_utils.utils.download(url_bless_object+"endpoint.yml")
-                    value = create_utils.utils.yaml_parser(value.read())
+                    value = value.read().decode('utf-8')
                 file = create_utils.utils.yaml_create(value,CURR_DIR+"/endpoint.yml")
             exit()
         

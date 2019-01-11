@@ -2,6 +2,8 @@ import yaml
 import os
 import shutil
 import git
+import requests
+from dotenv import load_dotenv
 from urllib.request import urlopen
 
 APP_HOME = os.path.expanduser("~")
@@ -111,6 +113,7 @@ def check_internet():
     else:
         return True
 
+
 def download(url):
     try:
         response = urlopen(url)
@@ -123,15 +126,52 @@ def download(url):
 def check_folder(path):
     return os.path.isdir(path)
 
+
 def create_folder(path):
     return os.makedirs(path)
+
 
 def remove_folder(path):
     return shutil.rmtree(path)
 
+
 def read_value(file):
     value = open(file)
     return value.read()
+
+
+# for login deploy
+def check_env():
+    return os.path.isfile("{}/.bless.env".format(APP_HOME))
+
+
+def load_env_file():
+    return load_dotenv("{}/.bless.env".format(APP_HOME), override=True)
+
+def get_env_values():
+    if check_env():
+        load_env_file()
+        bless_env = {}
+        bless_env['username'] = os.environ.get('OS_USERNAME')
+        bless_env['password'] = os.environ.get('OS_PASSWORD')
+        bless_env['project_url'] = os.environ.get('OS_PROJECT_URL')
+        bless_env['project_port'] = os.environ.get('OS_PROJECT_PORT')
+        return bless_env
+    else:
+        print("Can't find bless.env")
+
+def send_http(url, data = None, headers=None):
+    send = requests.post(url, json=data, headers=headers)
+    respons = send.json()
+    return respons
+
+def sign_to_project(url, username, password):
+    post_data = {
+        "username": username,
+        "password": password
+    }
+    resp = send_http(url, data=post_data)
+    return resp
 
 
 
