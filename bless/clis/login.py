@@ -1,5 +1,6 @@
 from bless.clis.base import Base
 from bless.libs import login_utils
+from getpass import getpass
 import os
 
 
@@ -17,4 +18,6 @@ class Login(Base):
     """
 
     def execute(self):
-        login_utils.login("user","pass")
+        username = input("Username: ")
+        password = getpass("Password: ")
+        login_utils.login(username , password)
