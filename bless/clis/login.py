@@ -10,6 +10,8 @@ class Login(Base):
     """
         usage:
             login
+            login neo
+            login docker
 
         Build Project
 
@@ -18,6 +20,11 @@ class Login(Base):
     """
 
     def execute(self):
-        username = input("Username: ")
-        password = getpass("Password: ")
-        login_utils.login(username , password)
+        if self.args['neo']:
+            username = input("Username: ")
+            password = getpass("Password: ")
+            login_utils.login(username , password)
+
+        if self.args['docker']:
+            login_utils.login_docker()
+

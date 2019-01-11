@@ -1,6 +1,6 @@
 from passlib.hash import pbkdf2_sha256
 from bless.libs import utils
-import os
+import os, docker
 
 APP_HOME = utils.APP_HOME
 DEFAULT_PROJECT = "http://103.93.53.46"
@@ -45,6 +45,10 @@ def login_neo(username, password, auth_url = None, port=None):
 def login(username, password):
     pasword_hash = pbkdf2_sha256.hash(password)
     login_neo(username, pasword_hash)
+
+
+def login_docker():
+    os.system("docker login")
 
 
 def logout():
