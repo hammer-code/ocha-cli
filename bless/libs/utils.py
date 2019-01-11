@@ -154,18 +154,24 @@ def get_env_values():
         bless_env = {}
         bless_env['username'] = os.environ.get('OS_USERNAME')
         bless_env['password'] = os.environ.get('OS_PASSWORD')
-        bless_env['auth_url'] = os.environ.get('OS_AUTH_URL')
+        bless_env['project_url'] = os.environ.get('OS_PROJECT_URL')
+        bless_env['project_port'] = os.environ.get('OS_PROJECT_PORT')
         return bless_env
     else:
         print("Can't find bless.env")
+
+def send_http(url, data = None, headers=None):
+    send = requests.post(url, json=data, headers=headers)
+    respons = send.json()
+    return respons
 
 def sign_to_project(url, username, password):
     post_data = {
         "username": username,
         "password": password
     }
-
-    return ""
+    resp = send_http(url, data=post_data)
+    return resp
 
 
 

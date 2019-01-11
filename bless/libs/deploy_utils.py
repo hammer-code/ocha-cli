@@ -20,7 +20,7 @@ def neo_deploy(bless_object, app_path):
     env_data = utils.get_env_values()
     password = getpass("Your Neo Password: ")
     password_unhash = pbkdf2_sha256.verify(password, env_data['password'])
-    head_url = env_data['OS_PROJECT_URL']+":"+env_data['OS_PROJECT_PORT']
+    head_url = env_data['project_url']+":"+env_data['project_port']
     auth = None
     if not password_unhash:
         print("Password Wrong")
@@ -28,10 +28,9 @@ def neo_deploy(bless_object, app_path):
     else:
         url_login = head_url+"/api/sign"
         auth = utils.sign_to_project(url_login,env_data['username'], password) 
-
+    auth = auth['data']['token']
     files = {'bless_file': open(app_path+"/.deploy/bless.yml",'rb')}
-    
-    
+
     headers = {
         "Authorization": auth
     }
@@ -40,6 +39,6 @@ def neo_deploy(bless_object, app_path):
         'app_port': bless_object['config']['app']['port'],
         'username': env_data['username'],
     }
-    
-    r = requests.post(head_url+"/api/project", files=files, data=values, headers=headers)
-    return r
+
+    respons = requests.post(head_url+"/api/project", files=files, data=values, headers=headers)
+    return respons.json()
