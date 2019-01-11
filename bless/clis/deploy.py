@@ -22,8 +22,22 @@ class Deploy(Base):
 
     def execute(self):
         if self.args['docker']:
-            deploy_utils.docker_deploy()
+            bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.yml")
+            deploy_utils.docker_deploy(bless_object, CURR_DIR)
+        
         if self.args['neo']:
             bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.yml")
             respon = deploy_utils.neo_deploy(bless_object,CURR_DIR)
-            print(respon)
+            data = respon['data']
+            data_vm = dict()
+            data_project = dict()
+            for i in data:
+                data_vm = i['vm']
+                data_project = i['create']
+            print("ID VM : ",data_vm['id'])
+            print("Status : ",data_vm['status'])
+            print("Username : ",data_project[0]['stack']['parameters']['username'])
+            print("IP : ",data_vm['ip'][1])
+            print("PORT : ",data_project[0]['stack']['parameters']['app_port'])
+            access_api = "http://"+data_vm['ip'][1]+":"+data_project[0]['stack']['parameters']['app_port']+"/api/<endpoint>"
+            print("ACCESS_API: ", access_api)

@@ -4,15 +4,24 @@ from bless.libs import utils
 from getpass import getpass
 
 
+client = docker.from_env()
+
 # deploying in docker
-def check_image(bless_object):
-    print(bless_object)
+def check_image(app_name):
+    try:
+        img_chek = client.images.get(app_name)
+    except Exception:
+        return None
+    else:
+       return img_chek
 
 
-def docker_deploy():
-    client = docker.from_env()
-    list_image = client.images.list()
-    print(list_image)
+def docker_deploy(bless_object, app_path):
+    app_name = bless_object['config']['app']['name']
+    img_data = check_image(app_name)
+    if img_data:
+        client.images.remove(image=app_name)
+    
 
 
 # Deploying in neo service
