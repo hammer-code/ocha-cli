@@ -23,7 +23,7 @@ Setup your pc connect to internet
 bless create
 ```
 
-Set up Object Yaml File
+Set up Object Ocha File
 
 ```
 bless build
@@ -37,10 +37,10 @@ bless run
 
 ## Requirements Install
 DB which one:
-Mysql/Mariadb [mysql/mariadb](https://mariadb.org/)
-Cockcroachdb [cockroachdb](https://www.cockroachlabs.com/)
+- [mysql/mariadb](https://mariadb.org/)
+- [cockroachdb](https://www.cockroachlabs.com/)
 
 Redis:
-Redis [redis](https://redis.io/)
+- [redis](https://redis.io/)
 
 
