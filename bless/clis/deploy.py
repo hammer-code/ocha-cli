@@ -4,6 +4,7 @@ import os
 
 
 CURR_DIR = os.getcwd()
+APP_HOME = deploy_utils.utils.APP_HOME
 
 class Deploy(Base):
     """
@@ -47,6 +48,7 @@ class Deploy(Base):
 
             deploy_utils.utils.yaml_create(data_deploy, CURR_DIR+"/.deploy/deploy.ocha")
             deploy_utils.utils.create_file("ssh_key.pem", CURR_DIR+"/.deploy/", pemkey)
+            os.chmod(CURR_DIR+"/.deploy/ssh_key.pem", 0o600)
 
             if deploy_utils.utils.read_file(CURR_DIR+"/.deploy/listdir.ocha"):
                 os.remove(CURR_DIR+"/.deploy/listdir.ocha")
