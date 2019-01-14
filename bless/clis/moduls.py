@@ -21,7 +21,6 @@ class Moduls(Base):
     """
 
     def execute(self):
-        print(self.args)
         app_path = CURR_DIR
         nm_modul = None
         if self.args['create']:
@@ -40,7 +39,7 @@ class Moduls(Base):
                 file = self.args['--file']
                 endpoint_data = modul_utils.utils.yaml_read(file)['endpoint']
             else:
-                endpoint_data = modul_utils.utils.yaml_read("endpoint.ocha")['endpoint']
+                endpoint_data = modul_utils.utils.yaml_read(CURR_DIR+"/endpoint.ocha")['endpoint']
             for key_i in endpoint_data:
                 for end_i in endpoint_data[key_i]:
                     modules_data = None
@@ -56,3 +55,6 @@ class Moduls(Base):
                             else:
                                 parsing_utils.create_moduls(nm_moduls,modules_data, app_path, sync_md=True)
                                 nm_modul = nm_moduls
+        if self.args['sync']:
+            config_data = modul_utils.utils.yaml_read(CURR_DIR+"/config.ocha")['config']
+            app_name = config_data['app']['name']

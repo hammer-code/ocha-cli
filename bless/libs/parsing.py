@@ -88,7 +88,7 @@ def initialize(file=None, path=None, sync_md=None):
                         nm_modul = nm_moduls
     if listdir:
         print("Failed: Moduls Folder Not Empty")
-        print("Info: Run 'bless moduls sync' to generate moduls for locals project")
+        print("Info: Run 'bless moduls create' to generate moduls for locals project")
     # database setup
     config_database = obj_data['config']['database']
     auth_config = obj_data['auth']

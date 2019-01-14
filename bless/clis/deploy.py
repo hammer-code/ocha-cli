@@ -31,9 +31,21 @@ class Deploy(Base):
             data = respon['data']
             data_vm = dict()
             data_project = dict()
+            pemkey=""
             for i in data:
                 data_vm = i['vm']
                 data_project = i['create']
+                pemkey = i['pemkey']
+            pemkey = pemkey.decode('utf-8')
+            data_deploy = {
+                "id_vm": data_vm['id'],
+                "status": data_vm['status'],
+                "username": data_project[0]['stack']['parameters']['username'],
+                "ip": data_vm['ip'][1]
+            }
+            pemkey_name = data_project[0]['stack']['parameters']['key_name']
+            deploy_utils.utils.yaml_create(data_deploy, CURR_DIR+"/.deploy/deploy.ocha")
+            deploy_utils.utils.create_file(pemkey_name, CURR_DIR+"/.deploy/", pemkey)
             print("ID VM : ",data_vm['id'])
             print("Status : ",data_vm['status'])
             print("Username : ",data_project[0]['stack']['parameters']['username'])
