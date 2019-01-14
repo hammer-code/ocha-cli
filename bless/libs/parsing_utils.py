@@ -190,14 +190,19 @@ api.add_resource(UserloginInsert, '/user/add')\n"""
     f.close()
 
 
-def create_moduls(moduls_name, moduls_data, app_path):
+def create_moduls(moduls_name, moduls_data, app_path, sync_md=None):
     import_value = "from app.models import model as db\n\n\n"
-    moduls_path = app_path+"/app/moduls/"
-    file_moduls_path = moduls_path+moduls_name+".py"
+    moduls_path = ""
+    file_moduls_path = ""
+    if sync_md is None:
+        moduls_path = app_path+"/app/moduls/"
+        file_moduls_path = moduls_path+moduls_name+".py"
+    else:
+        moduls_path = app_path+"/moduls/"
+        file_moduls_path = moduls_path+moduls_name+".py"
 
     f=open(file_moduls_path, "a+")
     f.write(import_value)
-    
     function_value = ""
     print("Moduls Create: ",moduls_name)
     for i in moduls_data:
@@ -315,9 +320,16 @@ def create_moduls(moduls_name, moduls_data, app_path):
     f.write(function_value)
     f.close()
 
-def add_function_moduls(moduls_name, moduls_data, app_path):
-    moduls_path = app_path+"/app/moduls/"
-    file_moduls_path = moduls_path+moduls_name+".py"
+def add_function_moduls(moduls_name, moduls_data, app_path, sync_md = None):
+    moduls_path = ""
+    file_moduls_path = ""
+    if sync_md is None:
+        moduls_path = app_path+"/app/moduls/"
+        file_moduls_path = moduls_path+moduls_name+".py"
+    else:
+        moduls_path = app_path+"/moduls/"
+        file_moduls_path = moduls_path+moduls_name+".py"
+
     with open(file_moduls_path, "a") as myfile:
         function_value = ""
         for i in moduls_data:

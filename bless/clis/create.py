@@ -32,7 +32,9 @@ class Create(Base):
     def execute(self):
         internet = create_utils.utils.check_internet()
         url_bless_object = "https://raw.githubusercontent.com/Blesproject/bless_object/master/"
-       
+        if not create_utils.utils.check_folder(CURR_DIR+"/moduls"):
+            create_utils.utils.create_folder(CURR_DIR+"/moduls")
+        
         if self.args['database']:
             check_yml = create_utils.utils.read_file(CURR_DIR+"/database.ocha")
             if not check_yml:

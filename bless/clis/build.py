@@ -39,7 +39,7 @@ class Build(Base):
         init_yml = dict()
         init_file = None
         if not build_utils.check_init(CURR_DIR):
-            list_dir = build_utils.list_dir(CURR_DIR)
+            list_dir = build_utils.utils.list_dir(CURR_DIR)
             for i in list_dir:
                 index = i['index'].split(".")
                 init_create[index[0]] = {

@@ -174,4 +174,15 @@ def sign_to_project(url, username, password):
     return resp
 
 
+def list_dir(dirname):
+    listdir = list()
+    for root, dirs, files in os.walk(dirname):
+        for file in files:
+            data = {
+                "index": file,
+                "file": os.path.join(root, file)
+            }
+            listdir.append(data)
+    return listdir
+
 
