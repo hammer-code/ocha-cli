@@ -22,11 +22,11 @@ class Deploy(Base):
 
     def execute(self):
         if self.args['docker']:
-            bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.yml")
+            bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.ocha")
             deploy_utils.docker_deploy(bless_object, CURR_DIR)
         
         if self.args['neo']:
-            bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.yml")
+            bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.ocha")
             respon = deploy_utils.neo_deploy(bless_object,CURR_DIR)
             data = respon['data']
             data_vm = dict()

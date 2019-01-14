@@ -38,7 +38,7 @@ def neo_deploy(bless_object, app_path):
         url_login = head_url+"/api/sign"
         auth = utils.sign_to_project(url_login,env_data['username'], password) 
     auth = auth['data']['token']
-    files = {'bless_file': open(app_path+"/.deploy/bless.yml",'rb')}
+    files = {'bless_file': open(app_path+"/.deploy/bless.ocha",'rb')}
 
     headers = {
         "Authorization": auth
