@@ -21,7 +21,7 @@ class Build(Base):
     """
 
     def execute(self):
-        config = build_utils.utils.yaml_read("config.yml")['config']
+        config = build_utils.utils.yaml_read("config.ocha")['config']
 
         if self.args['database']:
             file = self.args['--file']
@@ -46,10 +46,10 @@ class Build(Base):
                     "file": i['index']
                 }
             init_yml['deploy'] = init_create
-            build_utils.utils.yaml_create(init_yml,CURR_DIR+"/init.yml")
-            init_file = build_utils.utils.yaml_read(CURR_DIR+"/init.yml")
+            build_utils.utils.yaml_create(init_yml,CURR_DIR+"/init.ocha")
+            init_file = build_utils.utils.yaml_read(CURR_DIR+"/init.ocha")
         else:
-            init_file = build_utils.utils.yaml_read(CURR_DIR+"/init.yml")
+            init_file = build_utils.utils.yaml_read(CURR_DIR+"/init.ocha")
 
         build_utils.initialite(init_file, CURR_DIR)
         build_utils.build(CURR_DIR)

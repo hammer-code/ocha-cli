@@ -19,6 +19,6 @@ class Run(Base):
     """
 
     def execute(self):
-        config_yml = run_utils.utils.yaml_read(CURR_DIR+"/config.yml")
-        build_yml = run_utils.utils.yaml_read(CURR_DIR+"/.deploy/build.yml")
+        config_yml = run_utils.utils.yaml_read(CURR_DIR+"/config.ocha")
+        build_yml = run_utils.utils.yaml_read(CURR_DIR+"/.deploy/build.ocha")
         run_utils.execute_project(config_yml, build_yml)

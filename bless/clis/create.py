@@ -34,7 +34,7 @@ class Create(Base):
         url_bless_object = "https://raw.githubusercontent.com/Blesproject/bless_object/master/"
        
         if self.args['database']:
-            check_yml = create_utils.utils.read_file(CURR_DIR+"/database.yml")
+            check_yml = create_utils.utils.read_file(CURR_DIR+"/database.ocha")
             if not check_yml:
                 if not internet:
                     value = {
@@ -90,40 +90,40 @@ class Create(Base):
                         }
                     }
                 else:
-                    value = create_utils.utils.download(url_bless_object+"database.yml")
+                    value = create_utils.utils.download(url_bless_object+"database.ocha")
                     value = value.read().decode('utf-8')
-                file = create_utils.utils.yaml_create(value,CURR_DIR+"/database.yml")
+                file = create_utils.utils.yaml_create(value,CURR_DIR+"/database.ocha")
             exit()
         if self.args['auth']:
-            check_yml = create_utils.utils.read_file(CURR_DIR+"/auth.yml")
+            check_yml = create_utils.utils.read_file(CURR_DIR+"/auth.ocha")
             if not check_yml:
                 if not internet:
                     value = ""
                 else:
-                    value = create_utils.utils.download(url_bless_object+"auth.yml")
+                    value = create_utils.utils.download(url_bless_object+"auth.ocha")
                     value = value.read().decode('utf-8')
-                file = create_utils.utils.yaml_create(value,CURR_DIR+"/auth.yml")
+                file = create_utils.utils.yaml_create(value,CURR_DIR+"/auth.ocha")
             exit()
         if self.args['config']:
-            check_yml = create_utils.utils.read_file(CURR_DIR+"/config.yml")
+            check_yml = create_utils.utils.read_file(CURR_DIR+"/config.ocha")
             if not check_yml:
                 if not internet:
                     value = ""
                 else:
-                    value = create_utils.utils.download(url_bless_object+"config.yml")
+                    value = create_utils.utils.download(url_bless_object+"config.ocha")
                     value = value.read().decode('utf-8')
-                file = create_utils.utils.yaml_create(value,CURR_DIR+"/config.yml")
+                file = create_utils.utils.yaml_create(value,CURR_DIR+"/config.ocha")
             exit()
 
         if self.args['endpoint']:
-            check_yml = create_utils.utils.read_file(CURR_DIR+"/endpoint.yml")
+            check_yml = create_utils.utils.read_file(CURR_DIR+"/endpoint.ocha")
             if not check_yml:
                 if not internet:
                     value = ""
                 else:
-                    value = create_utils.utils.download(url_bless_object+"endpoint.yml")
+                    value = create_utils.utils.download(url_bless_object+"endpoint.ocha")
                     value = value.read().decode('utf-8')
-                file = create_utils.utils.yaml_create(value,CURR_DIR+"/endpoint.yml")
+                file = create_utils.utils.yaml_create(value,CURR_DIR+"/endpoint.ocha")
             exit()
         
         all_project = ['database','auth','config','endpoint']
@@ -186,9 +186,9 @@ class Create(Base):
                         }
                     }
             else:
-                value = create_utils.utils.download(url_bless_object+"/"+i+".yml")
+                value = create_utils.utils.download(url_bless_object+"/"+i+".ocha")
                 # value = create_utils.utils.yaml_parser(value.read())
                 # print(type(value.read()))
                 value_fix = value.read().decode('utf-8')
-            file = create_utils.utils.create_file(i+".yml",CURR_DIR,value_fix)
+            file = create_utils.utils.create_file(i+".ocha",CURR_DIR,value_fix)
         exit()

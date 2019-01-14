@@ -15,7 +15,7 @@ def list_dir(dirname):
     return listdir
 
 def check_init(path):
-    path_file = path+"/init.yml"
+    path_file = path+"/init.ocha"
     check = utils.read_file(path_file)
     return check
 
@@ -33,15 +33,15 @@ def initialite(init, path):
     for i in deploy_data:
         val += utils.read_value(path+"/"+deploy_data[i]['file'])
         val += "\n"
-    utils.create_file("bless.yml",deploy_path, val)
+    utils.create_file("bless.ocha",deploy_path, val)
 
 
 def build(path):
     deploy_path = path+"/.deploy"
-    path_bless = deploy_path+"/bless.yml"
+    path_bless = deploy_path+"/bless.ocha"
     app_path = parse.initialize(path_bless)
     run_path = {
         "source_path": "",
         "build_path": app_path
     }
-    utils.yaml_writeln(run_path,deploy_path+"/build.yml")
+    utils.yaml_writeln(run_path,deploy_path+"/build.ocha")
