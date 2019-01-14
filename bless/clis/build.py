@@ -9,22 +9,22 @@ CURR_DIR = os.getcwd()
 class Build(Base):
     """
         usage:
-            build
+            build [-m | --moduls]
             build database [-f File]
             build endpoint [-f File]
 
         Build Project
 
         Options:
-        -h --help                             Print usage
+        -h --help                 Print usage
+        -m --moduls               Sync Moduls
         -f file --file=FILE       sequence execute object
     """
 
     def execute(self):
-        config = build_utils.utils.yaml_read("config.ocha")['config']
-
         if self.args['database']:
             file = self.args['--file']
+            config = build_utils.utils.yaml_read("config.ocha")['config']
             database_obj = build_utils.utils.yaml_read(file)['database']
             config = config['database']
             if config['host'] == "localhost" or config['host'] == "127.0.0.1":
@@ -33,8 +33,8 @@ class Build(Base):
             exit()
 
         if self.args['endpoint']:
+            config = build_utils.utils.yaml_read("config.ocha")['config']
             file = self.args['--file']
-
         init_create = dict()
         init_yml = dict()
         init_file = None
@@ -52,4 +52,5 @@ class Build(Base):
             init_file = build_utils.utils.yaml_read(CURR_DIR+"/init.ocha")
 
         build_utils.initialite(init_file, CURR_DIR)
-        build_utils.build(CURR_DIR)
+        moduls_check = self.args['--moduls']
+        build_utils.build(CURR_DIR, md_check=moduls_check)

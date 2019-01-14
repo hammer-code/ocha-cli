@@ -26,15 +26,12 @@ class Create(Base):
             endpoint                              Create Endpoint Object
 
         Options:
-        -h --help                             Print usage
+        -h --help                                 Print usage
     """
 
     def execute(self):
         internet = create_utils.utils.check_internet()
         url_bless_object = "https://raw.githubusercontent.com/Blesproject/bless_object/master/"
-        if not create_utils.utils.check_folder(CURR_DIR+"/moduls"):
-            create_utils.utils.create_folder(CURR_DIR+"/moduls")
-        
         if self.args['database']:
             check_yml = create_utils.utils.read_file(CURR_DIR+"/database.ocha")
             if not check_yml:
@@ -127,9 +124,23 @@ class Create(Base):
                     value = value.read().decode('utf-8')
                 file = create_utils.utils.yaml_create(value,CURR_DIR+"/endpoint.ocha")
             exit()
-        
         all_project = ['database','auth','config','endpoint']
-       
+        
+        if create_utils.utils.list_dir(CURR_DIR):
+            print("Warning: Folder Not Empty | Create Project For Empty Directory")
+            exit()
+            # listdir_new = list()
+            # file = create_utils.utils.list_dir(CURR_DIR)
+            # listdir = create_utils.utils.yaml_read(CURR_DIR+"/.deploy/listdir.ocha")
+            # for c_file in file:
+            #     if c_file in listdir:
+            #         listdir_new.append(c_file)
+            #     else:
+            #        listdir_new.append(c_file)
+            # print(listdir_new)
+        if not create_utils.utils.check_folder(CURR_DIR+"/moduls"):
+            create_utils.utils.create_folder(CURR_DIR+"/moduls")
+
         for i in all_project:
             value_fix = ""
             if not internet:
@@ -189,8 +200,5 @@ class Create(Base):
                     }
             else:
                 value = create_utils.utils.download(url_bless_object+"/"+i+".ocha")
-                # value = create_utils.utils.yaml_parser(value.read())
-                # print(type(value.read()))
                 value_fix = value.read().decode('utf-8')
             file = create_utils.utils.create_file(i+".ocha",CURR_DIR,value_fix)
-        exit()

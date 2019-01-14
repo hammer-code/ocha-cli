@@ -46,12 +46,28 @@ def database_setting(config):
             port=config['port'],
             host=config['host']
         )
+        db = conn.cursor()
+        conn.set_session(autocommit=True)
+        try:
+            db.execute("SHOW TABLES")
+        except (Exception, psycopg2.DatabaseError) as e:
+            print("DATABASE: ", e)
+        else:
+            data = db.fetchall()
+            print("removing tables")
+            for i in data:
+                qry = None
+                qry = "DROP TABLE "+i[0]
+                try:
+                    db.execute(qry)
+                except (Exception, psycopg2.DatabaseError) as e:
+                    raise e
     else:
         db_check = None
         try:
             db.execute("CREATE DATABASE "+config['name'])
         except (Exception, psycopg2.DatabaseError) as e:
-            print(e)
+            print("DATABASE: ", e)
             db_check = True
 
         if db_check:
@@ -67,10 +83,10 @@ def database_setting(config):
             try:
                 db.execute("SHOW TABLES")
             except (Exception, psycopg2.DatabaseError) as e:
-                print(e)
+                print("DATABASE: ", e)
             else:
                 data = db.fetchall()
-                print("removing tables")
+                print("WARNING: Removing All Tables")
                 for i in data:
                     qry = None
                     qry = "DROP TABLE "+i[0]

@@ -15,11 +15,13 @@ class Moduls(Base):
         Build Project
 
         Options:
+        -m --moduls               Sync Moduls
         -h --help                             Print usage
         -f PATH --file=PATH       sequence execute object
     """
 
     def execute(self):
+        print(self.args)
         app_path = CURR_DIR
         nm_modul = None
         if self.args['create']:

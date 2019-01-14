@@ -2,10 +2,12 @@ from bless.libs import database
 from bless.libs import parsing_utils
 from bless.libs import utils
 from .setting import database_setting
-from os import rename, remove
+from os import rename, remove, getcwd
 
 
-def initialize(file=None, path=None):
+CURR_DIR = getcwd()
+
+def initialize(file=None, path=None, sync_md=None):
     obj_data = utils.yaml_read(file)
     # Create APP
     app_name =  obj_data['config']['app']['name']
@@ -62,6 +64,7 @@ def initialize(file=None, path=None):
 
     # create moduls
     nm_modul = None
+    listdir = utils.list_dir(CURR_DIR+"/moduls")
     for key_i in endpoint_data:
         for end_i in endpoint_data[key_i]:
             modules_data = None
@@ -73,11 +76,19 @@ def initialize(file=None, path=None):
                 for nm_moduls in modules_data:
                     if nm_modul == nm_moduls:
                         parsing_utils.add_function_moduls(nm_modul,modules_data, app_path)
+                        if sync_md == True:
+                            if not listdir:
+                                parsing_utils.add_function_moduls(nm_modul,modules_data, CURR_DIR, sync_md=True)
                         nm_modul = nm_moduls
                     else:
                         parsing_utils.create_moduls(nm_moduls,modules_data, app_path)
+                        if sync_md == True:
+                            if not listdir :
+                                parsing_utils.create_moduls(nm_moduls,modules_data, CURR_DIR, sync_md=True)
                         nm_modul = nm_moduls
-
+    if listdir:
+        print("Failed: Moduls Folder Not Empty")
+        print("Info: Run 'bless moduls sync' to generate moduls for locals project")
     # database setup
     config_database = obj_data['config']['database']
     auth_config = obj_data['auth']
