@@ -1,5 +1,6 @@
 from bless.clis.base import Base
 from bless.libs import build_utils
+from bless.libs import database
 import os
 
 
@@ -9,20 +10,31 @@ class Build(Base):
     """
         usage:
             build
-            build [-s SEQUENCE]
+            build database [-f File]
+            build endpoint [-f File]
 
         Build Project
 
         Options:
         -h --help                             Print usage
-        -s sequence --sequence=SEQUENCE       sequence execute object
+        -f file --file=FILE       sequence execute object
     """
 
     def execute(self):
-        if self.args['--sequence'] == 'database':
-            execute_arg = self.args['--sequence']
-            print(execute_arg)
+        config = build_utils.utils.yaml_read("config.yml")['config']
+
+        if self.args['database']:
+            file = self.args['--file']
+            database_obj = build_utils.utils.yaml_read(file)['database']
+            config = config['database']
+            if config['host'] == "localhost" or config['host'] == "127.0.0.1":
+                database.database_parse(config, database_obj,
+                                            security = None, auth_config = None)
             exit()
+
+        if self.args['endpoint']:
+            file = self.args['--file']
+
         init_create = dict()
         init_yml = dict()
         init_file = None
@@ -38,5 +50,6 @@ class Build(Base):
             init_file = build_utils.utils.yaml_read(CURR_DIR+"/init.yml")
         else:
             init_file = build_utils.utils.yaml_read(CURR_DIR+"/init.yml")
+
         build_utils.initialite(init_file, CURR_DIR)
         build_utils.build(CURR_DIR)

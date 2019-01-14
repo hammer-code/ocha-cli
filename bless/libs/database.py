@@ -92,7 +92,7 @@ def database_setting(config):
 
     return db
 
-def database_parse(config, obj_database, security, auth_config):
+def database_parse(config, obj_database, security = None, auth_config= None):
     db = database_setting(config)
     # data_finish = list()
     for tables in obj_database['tables']:
