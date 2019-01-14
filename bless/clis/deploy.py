@@ -36,16 +36,23 @@ class Deploy(Base):
                 data_vm = i['vm']
                 data_project = i['create']
                 pemkey = i['pemkey']
-            pemkey = pemkey.decode('utf-8')
+
+            pemkey = pemkey['data']['pemkey']
             data_deploy = {
                 "id_vm": data_vm['id'],
                 "status": data_vm['status'],
                 "username": data_project[0]['stack']['parameters']['username'],
                 "ip": data_vm['ip'][1]
             }
-            pemkey_name = data_project[0]['stack']['parameters']['key_name']
+
             deploy_utils.utils.yaml_create(data_deploy, CURR_DIR+"/.deploy/deploy.ocha")
-            deploy_utils.utils.create_file(pemkey_name, CURR_DIR+"/.deploy/", pemkey)
+            deploy_utils.utils.create_file("ssh_key.pem", CURR_DIR+"/.deploy/", pemkey)
+
+            if deploy_utils.utils.read_file(CURR_DIR+"/.deploy/listdir.ocha"):
+                os.remove(CURR_DIR+"/.deploy/listdir.ocha")
+            file = deploy_utils.utils.list_dir(CURR_DIR)
+            deploy_utils.utils.yaml_writeln(file,CURR_DIR+"/.deploy/listdir.ocha")
+
             print("ID VM : ",data_vm['id'])
             print("Status : ",data_vm['status'])
             print("Username : ",data_project[0]['stack']['parameters']['username'])
