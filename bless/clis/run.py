@@ -37,10 +37,29 @@ class Run(Base):
                 ssh.exec_command("cd "+app_name+"; bless run;")
                 ssh.close()
                 exit()
+
             if self.args['--action'] == "stop":
                 ssh = scp_utils.ssh_connect(host, username, key_filename=key)
                 ssh.get_transport().is_active()
                 ssh.exec_command("kill  $(lsof -t -i:"+str(app_port)+")")
+                ssh.close()
+                exit()
+
+            if self.args['--action'] == "status":
+                ssh = scp_utils.ssh_connect(host, username, key_filename=key)
+                ssh.get_transport().is_active()
+                _,stdout,_ = ssh.exec_command("lsof -i -P -n | grep "+str(app_port))
+                status = stdout.read().decode("utf8")
+                if status:
+                    print("###################################################")
+                    print("REPORT: Your Neo Service Started")
+                    print("###################################################")
+                    print(status)
+                    print("###################################################")
+                else:
+                    print("###################################################")
+                    print("REPORT: Your Neo Not Started")
+                    print("###################################################")
                 ssh.close()
                 exit()
 
