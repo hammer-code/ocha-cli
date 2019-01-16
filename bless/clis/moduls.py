@@ -69,12 +69,11 @@ class Moduls(Base):
             ssh = scp_utils.ssh_connect(host, username, key_filename=key)
             ssh.get_transport().is_active()
             ftp_client= ssh.open_sftp()
-
             for i in listsdir:
                 scp_utils.sync_file(ftp_client,i['file'], "/home/"+username+"/"+i['index'])
             ftp_client.close()
             for command in listsdir:
-                # ssh.exec_command("sudo cp /home/"+username+"/"+i['index']+" /root/BLESS/"+app_name+"/app/moduls/")
-                ssh.exec_command("sudo mv /home/"+username+"/"+command['index']+" /root/")
+                ssh.exec_command("sudo cp /home/"+username+"/"+command['index']+" /root/BLESS/"+app_name+"/app/moduls/")
             ssh.close()
+
             exit()
