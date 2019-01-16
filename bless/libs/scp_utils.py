@@ -20,7 +20,3 @@ def ssh_connect(host, username, key_filename=None):
 
 def sync_file(ftp_client,path_file, path_remote):
     ftp_client.put(path_file, path_remote)
-
-def remote_server(ssh,command):
-    ssh.exec_command(command)
-    return ssh

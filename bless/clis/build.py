@@ -35,6 +35,8 @@ class Build(Base):
         if self.args['endpoint']:
             config = build_utils.utils.yaml_read("config.ocha")['config']
             file = self.args['--file']
+            exit()
+            
         init_create = dict()
         init_yml = dict()
         init_file = None

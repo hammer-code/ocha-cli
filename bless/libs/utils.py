@@ -3,6 +3,7 @@ import os
 import shutil
 import git
 import requests
+import zipfile
 from dotenv import load_dotenv
 from urllib.request import urlopen
 
@@ -184,5 +185,13 @@ def list_dir(dirname):
             }
             listdir.append(data)
     return listdir
+
+def get_http(url, headers=None):
+    send = requests.get(url, headers=headers)
+    respons = send.json()
+    return respons
+
+def make_archive(name, path):
+    shutil.make_archive(name,"zip",path)
 
 

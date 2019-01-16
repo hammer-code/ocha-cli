@@ -1,6 +1,6 @@
 from bless.clis.base import Base
-from bless.libs import deploy_utils
-import os
+from bless.libs import deploy_utils, scp_utils
+import os , time
 
 
 CURR_DIR = os.getcwd()
@@ -25,28 +25,29 @@ class Deploy(Base):
         if self.args['docker']:
             bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.ocha")
             deploy_utils.docker_deploy(bless_object, CURR_DIR)
-        
         if self.args['neo']:
-            bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.ocha")
-            respon = deploy_utils.neo_deploy(bless_object,CURR_DIR)
-            data = respon['data']
+            bless_config = deploy_utils.utils.yaml_read(CURR_DIR+"/config.ocha")
+            # listdir = deploy_utils.utils.list_dir(CURR_DIR)
+            respon = deploy_utils.neo_deploy_new(bless_config)
             data_vm = dict()
             data_project = dict()
             pemkey=""
-            for i in data:
+            for i in respon:
                 data_vm = i['vm']
                 data_project = i['create']
                 pemkey = i['pemkey']
 
             pemkey = pemkey['data']['pemkey']
+            username = data_project[0]['stack']['parameters']['username']
             data_deploy = {
                 "id_vm": data_vm['id'],
                 "status": data_vm['status'],
-                "username": data_project[0]['stack']['parameters']['username'],
+                "username": username,
                 "ip": data_vm['ip'][1]
             }
-
             deploy_utils.utils.yaml_create(data_deploy, CURR_DIR+"/.deploy/deploy.ocha")
+            if deploy_utils.utils.read_file(CURR_DIR+"/.deploy/ssh_key.pem"):
+                os.remove(CURR_DIR+"/.deploy/ssh_key.pem")
             deploy_utils.utils.create_file("ssh_key.pem", CURR_DIR+"/.deploy/", pemkey)
             os.chmod(CURR_DIR+"/.deploy/ssh_key.pem", 0o600)
 
@@ -54,11 +55,82 @@ class Deploy(Base):
                 os.remove(CURR_DIR+"/.deploy/listdir.ocha")
             file = deploy_utils.utils.list_dir(CURR_DIR)
             deploy_utils.utils.yaml_writeln(file,CURR_DIR+"/.deploy/listdir.ocha")
+            app_name = data_project[0]['stack']['parameters']['app_name']
+            host = data_vm['ip'][1]
+            if deploy_utils.utils.read_file(CURR_DIR+"/."+str(app_name)+".zip"):
+                os.remove(CURR_DIR+"/."+str(app_name)+".zip")
+            deploy_utils.utils.make_archive("."+str(app_name), CURR_DIR)
 
+            
+            print("###############################################")
+            print("######### BUILDING NEO SERVICE SUCCESS ########")
+            print("###############################################")
             print("ID VM : ",data_vm['id'])
             print("Status : ",data_vm['status'])
             print("Username : ",data_project[0]['stack']['parameters']['username'])
             print("IP : ",data_vm['ip'][1])
             print("PORT : ",data_project[0]['stack']['parameters']['app_port'])
-            access_api = "http://"+data_vm['ip'][1]+":"+data_project[0]['stack']['parameters']['app_port']+"/api/<endpoint>"
+            access_api = "http://"+data_vm['ip'][1]+":"+str(data_project[0]['stack']['parameters']['app_port'])+"/api/<endpoint>"
             print("ACCESS_API: ", access_api)
+            print("###############################################")
+            print("----------------- DEPLOYING ------------------")
+            print("-- DEPLOYING SYSTEM A FEW MINUTE ! RELAXING --")
+            print("###############################################")
+            time.sleep(120)
+            # app_name="bless_test01"
+            # username = "sofyan"
+            # host = "103.93.53.106"
+            project_archive = CURR_DIR+"/."+str(app_name)+".zip"
+            key = CURR_DIR+"/.deploy/ssh_key.pem"
+            ssh = scp_utils.ssh_connect(host,username, key_filename=key)
+            ssh.get_transport().is_active()
+            ftp_client= ssh.open_sftp()
+            scp_utils.sync_file(ftp_client, project_archive, "/home/"+username+"/project.zip")
+            ftp_client.close()
+            print("###############################################")
+            print("-------------- DEPLOYING SUCCESS --------------")
+            print("###############################################")
+            ssh.exec_command("mkdir "+app_name)
+            ssh.exec_command("mv project.zip "+app_name+"/"+app_name+".zip")
+            ssh.exec_command("cd "+app_name+"; unzip "+app_name+".zip; rm "+app_name+".zip")
+            ssh.exec_command("cd "+app_name+"; bless build;")
+            ssh.close()
+
+
+
+        # if self.args['neo']:
+        #     bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.ocha")
+        #     respon = deploy_utils.neo_deploy(bless_object,CURR_DIR)
+        #     data = respon['data']
+        #     data_vm = dict()
+        #     data_project = dict()
+        #     pemkey=""
+        #     for i in data:
+        #         data_vm = i['vm']
+        #         data_project = i['create']
+        #         pemkey = i['pemkey']
+
+        #     pemkey = pemkey['data']['pemkey']
+        #     data_deploy = {
+        #         "id_vm": data_vm['id'],
+        #         "status": data_vm['status'],
+        #         "username": data_project[0]['stack']['parameters']['username'],
+        #         "ip": data_vm['ip'][1]
+        #     }
+
+        #     deploy_utils.utils.yaml_create(data_deploy, CURR_DIR+"/.deploy/deploy.ocha")
+        #     deploy_utils.utils.create_file("ssh_key.pem", CURR_DIR+"/.deploy/", pemkey)
+        #     os.chmod(CURR_DIR+"/.deploy/ssh_key.pem", 0o600)
+
+        #     if deploy_utils.utils.read_file(CURR_DIR+"/.deploy/listdir.ocha"):
+        #         os.remove(CURR_DIR+"/.deploy/listdir.ocha")
+        #     file = deploy_utils.utils.list_dir(CURR_DIR)
+        #     deploy_utils.utils.yaml_writeln(file,CURR_DIR+"/.deploy/listdir.ocha")
+
+        #     print("ID VM : ",data_vm['id'])
+        #     print("Status : ",data_vm['status'])
+        #     print("Username : ",data_project[0]['stack']['parameters']['username'])
+        #     print("IP : ",data_vm['ip'][1])
+        #     print("PORT : ",data_project[0]['stack']['parameters']['app_port'])
+        #     access_api = "http://"+data_vm['ip'][1]+":"+data_project[0]['stack']['parameters']['app_port']+"/api/<endpoint>"
+        #     print("ACCESS_API: ", access_api)
