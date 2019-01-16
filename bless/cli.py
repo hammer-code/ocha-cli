@@ -1,6 +1,6 @@
 """
 Usage:
-  bless <command> [<args>...]
+  ocha <command> [<args>...]
 
 Options:
   -h, --help                             display this help and exit
@@ -13,7 +13,7 @@ Commands:
   generate      Generate Bless Object
   run           Run Your Project
 
-Run 'bless COMMAND --help' for more information on a command.
+Run 'ocha COMMAND --help' for more information on a command.
 """
 
 from inspect import getmembers, isclass
