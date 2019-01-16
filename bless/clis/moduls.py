@@ -1,5 +1,7 @@
 from bless.clis.base import Base
-from bless.libs import modul_utils, parsing_utils
+from bless.libs import modul_utils
+from bless.libs import parsing_utils
+from bless.libs import scp_utils
 import os
 
 
@@ -58,3 +60,21 @@ class Moduls(Base):
         if self.args['sync']:
             config_data = modul_utils.utils.yaml_read(CURR_DIR+"/config.ocha")['config']
             app_name = config_data['app']['name']
+            listsdir = modul_utils.utils.list_dir(CURR_DIR+"/moduls/")
+            deploy_data = modul_utils.utils.yaml_read(CURR_DIR+"/.deploy/deploy.ocha")
+            host = deploy_data['ip']
+            username = deploy_data['username']
+            key = CURR_DIR+"/.deploy/ssh_key.pem"
+
+            ssh = scp_utils.ssh_connect(host, username, key_filename=key)
+            ssh.get_transport().is_active()
+            ftp_client= ssh.open_sftp()
+
+            for i in listsdir:
+                scp_utils.sync_file(ftp_client,i['file'], "/home/"+username+"/"+i['index'])
+            ftp_client.close()
+            for command in listsdir:
+                # ssh.exec_command("sudo cp /home/"+username+"/"+i['index']+" /root/BLESS/"+app_name+"/app/moduls/")
+                ssh.exec_command("sudo mv /home/"+username+"/"+command['index']+" /root/")
+            ssh.close()
+            exit()
