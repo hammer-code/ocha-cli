@@ -10,7 +10,6 @@ class Run(Base):
         usage:
             run
             run [-p PATH]
-            run neo
             run neo [-a ACTION]
 
         Run Project
@@ -18,7 +17,7 @@ class Run(Base):
         Options:
         -h --help                             Print usage
         -p path --path=PATH                   Build to own path
-        -a action --action=ACTION             start or stop neo service
+        -a action --action=ACTION             start, stop and status neo service
     """
 
     def execute(self):
@@ -34,7 +33,13 @@ class Run(Base):
             if self.args['--action'] == 'start':
                 ssh = scp_utils.ssh_connect(host, username, key_filename=key)
                 ssh.get_transport().is_active()
-                ssh.exec_command("cd "+app_name+"; bless run;")
+                _,stdout,_ = ssh.exec_command("cd "+app_name+"; bless run;")
+                status = stdout.read().decode("utf8")
+                print("###################################################")
+                print("REPORT: Neo Service Started")
+                print("###################################################")
+                print(status)
+                print("###################################################")
                 ssh.close()
                 exit()
 
@@ -42,6 +47,12 @@ class Run(Base):
                 ssh = scp_utils.ssh_connect(host, username, key_filename=key)
                 ssh.get_transport().is_active()
                 ssh.exec_command("kill  $(lsof -t -i:"+str(app_port)+")")
+                _,stdout,_ = status = stdout.read().decode("utf8")
+                print("###################################################")
+                print("REPORT: Neo Service Stopped")
+                print("###################################################")
+                print(status)
+                print("###################################################")
                 ssh.close()
                 exit()
 
@@ -62,6 +73,8 @@ class Run(Base):
                     print("###################################################")
                 ssh.close()
                 exit()
+            print("REPORT: run neo -a <action>  | action : status | start | stop")
+            exit()
 
         config_yml = run_utils.utils.yaml_read(CURR_DIR+"/config.ocha")
         build_yml = run_utils.utils.yaml_read(CURR_DIR+"/.deploy/build.ocha")
