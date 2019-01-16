@@ -32,11 +32,11 @@ class RunTests(Command):
 
 
 setup(
-    name='bless',
+    name='ocha',
     version=__version__,
     description='Smart Microservice Generator On Python',
     long_description=long_description,
-    url='https://github.com/blesproject',
+    url='https://github.com/blesproject/bless_ocha',
     author='Sofyan Saputra',
     author_email='sofyan@biznetgio.com',
     license='MIT',
@@ -51,7 +51,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6'
     ],
-    keywords='bless',
+    keywords='bless_ocha',
     include_package_data=True,
     packages=find_packages(exclude=['docs', 'tests*']),
     install_requires=install_requires,
@@ -61,7 +61,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'bless=bless.cli:main',
+            'ocha=bless.cli:main',
         ],
     },
     cmdclass={'test': RunTests},
