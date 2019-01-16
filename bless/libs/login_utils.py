@@ -4,7 +4,7 @@ import os, docker
 
 APP_HOME = utils.APP_HOME
 DEFAULT_PROJECT = "http://103.93.53.46"
-DEFAULT_PORT = "6968"
+DEFAULT_PORT = "6969"
 
 def create_env_file(username, password, auth_url = None, port = None):
     url_a = port
