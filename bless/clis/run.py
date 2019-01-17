@@ -21,15 +21,14 @@ class Run(Base):
     """
 
     def execute(self):
-        deploy_data = run_utils.utils.yaml_read(CURR_DIR+"/.deploy/deploy.ocha")
-        config = run_utils.utils.yaml_read(CURR_DIR+"/config.ocha")
-        app_name = config['config']['app']['name']
-        app_port = config['config']['app']['port']
-        host = deploy_data['ip']
-        username = deploy_data['username']
-        key = CURR_DIR+"/.deploy/ssh_key.pem"
-
         if self.args['neo']:
+            deploy_data = run_utils.utils.yaml_read(CURR_DIR+"/.deploy/deploy.ocha")
+            config = run_utils.utils.yaml_read(CURR_DIR+"/config.ocha")
+            app_name = config['config']['app']['name']
+            app_port = config['config']['app']['port']
+            host = deploy_data['ip']
+            username = deploy_data['username']
+            key = CURR_DIR+"/.deploy/ssh_key.pem"
             if self.args['--action'] == 'start':
                 ssh = scp_utils.ssh_connect(host, username, key_filename=key)
                 ssh.get_transport().is_active()
