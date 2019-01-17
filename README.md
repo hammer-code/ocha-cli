@@ -20,19 +20,19 @@ cd ~/project1
 Setup your pc connect to internet
 
 ```
-bless create
+ocha create
 ```
 
 Set up Object Ocha File
 
 ```
-bless build
+ocha build
 ```
 
 Run Your Project
 
 ```
-bless run
+ocha run
 ```
 
 ## Requirements Install

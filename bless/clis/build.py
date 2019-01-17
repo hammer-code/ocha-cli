@@ -39,15 +39,6 @@ class Build(Base):
             config = build_utils.utils.yaml_read("config.ocha")['config']
             build_data = build_utils.utils.yaml_read(CURR_DIR+"/.deploy/build.ocha")
             app_path = build_data['build_path']
-            # if self.args['--service'] == 'neo':
-            #     if not build_utils.utils.read_file(CURR_DIR+"/.deploy/deploy.ocha"):
-            #         print("REPORT: Your Neo Service Not Activate")
-            #         exit()
-            #     print(build_data)
-            #     # print(endpoint_data)
-            #     exit()
-
-            #  CHECK BUILD
             if not build_utils.utils.check_folder(app_path):
                 print("FAILED: Build Your App Now")
                 exit()
