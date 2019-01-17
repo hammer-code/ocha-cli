@@ -58,6 +58,7 @@ class Moduls(Base):
                     exit()
                 os.remove(CURR_DIR+"/moduls/.gitignore")
                 modul_utils.utils.remove_folder(CURR_DIR+"/moduls/.git")
+                modul_utils.utils.report("REPORT", "Library Run Moduls In Project Success Installed")
             for key_i in endpoint_data:
                 for end_i in endpoint_data[key_i]:
                     modules_data = None
