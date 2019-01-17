@@ -93,7 +93,7 @@ class Moduls(Base):
                         ssh.exec_command("mv /home/"+username+"/"+command['index']+" /home/"+username+"/BLESS/"+app_name+"/app/moduls/")
                 ssh.close()
 
-                print("REPORT: After sync moduls then sync your endpoint")
+                print("REPORT: After sync moduls then build your endpoint in neo service")
                 exit()
 
             print("REPORT: Sync Moduls Locals")
@@ -110,5 +110,5 @@ class Moduls(Base):
                 modul_utils.utils.remove_folder(build_path+"/moduls")
             modul_utils.utils.copy(CURR_DIR+"/moduls/", build_path+"/moduls")
             print("REPORT: Sync Moduls Success")
-            print("REPORT: After sync moduls then sync your endpoint")
+            print("REPORT: After sync moduls then build your endpoint")
             exit()

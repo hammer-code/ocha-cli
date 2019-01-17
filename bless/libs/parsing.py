@@ -51,7 +51,6 @@ def initialize(file=None, path=None, sync_md=None):
     endpoint_data = obj_data['endpoint']
     parsing_utils.set_endpoint_template(endpoint_data, app_path)
     security = None
-    
     for i in endpoint_data:
         try:
             security = endpoint_data[i]['auth']
