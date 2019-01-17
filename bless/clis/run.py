@@ -29,6 +29,7 @@ class Run(Base):
             host = deploy_data['ip']
             username = deploy_data['username']
             key = CURR_DIR+"/.deploy/ssh_key.pem"
+            
             if self.args['--action'] == 'start':
                 ssh = scp_utils.ssh_connect(host, username, key_filename=key)
                 ssh.get_transport().is_active()

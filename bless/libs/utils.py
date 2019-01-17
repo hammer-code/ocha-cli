@@ -77,6 +77,13 @@ def copy(src, dest):
         print('Directory not copied. Error: %s' % e)
 
 
+def copyfile(src, dest):
+    try:
+        shutil.copyfile(src, dest)
+    except OSError as e:
+        print('Directory not copied. Error: %s' % e)
+
+
 def read_file(file):
     if os.path.isfile(file):
         return True
