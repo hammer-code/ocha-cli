@@ -21,7 +21,32 @@ def docker_deploy(bless_object, app_path):
     img_data = check_image(app_name)
     if img_data:
         client.images.remove(image=app_name)
+
+def check_neo_service(id_vm):
+    env_data = utils.get_env_values()
+    password = getpass("Your Neo Password: ")
+    password_unhash = pbkdf2_sha256.verify(password, env_data['password'])
+    head_url = env_data['project_url']+":"+env_data['project_port']
+    auth = None
+    if not password_unhash:
+        print("Password Wrong")
+        exit()
+    else:
+        url_login = head_url+"/api/login"
+        auth = utils.sign_to_project(url_login,env_data['username'], password)
+    auth = auth['data']['access_token']
+    headers = {
+        "Access-Token": auth
+    }
+    url_vm = head_url+"/api/list/vm/"+id_vm
     
+    try:
+        data_vm = utils.get_http(url_vm, headers=headers)
+        data_vm = data_vm['data']
+    except Exception:
+        return None
+    else:
+        return data_vm
 
 def neo_deploy_new(bless_object):
     env_data = utils.get_env_values()

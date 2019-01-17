@@ -12,14 +12,15 @@ class Moduls(Base):
         usage:
             moduls create [-f File]
             moduls sync
-            moduls sync [-f File] [-s SERVER]
+            moduls sync [-f File] [-s SERVICE]
 
         Build Project
 
         Options:
-        -m --moduls               Sync Moduls
-        -h --help                             Print usage
-        -f PATH --file=PATH       sequence execute object
+        -m --moduls                         Sync Moduls
+        -h --help                           Print usage
+        -f path --file=PATH                 sequence execute object
+        -s service --service=SERVICE        sequence execute object
     """
 
     def execute(self):
@@ -61,19 +62,53 @@ class Moduls(Base):
             config_data = modul_utils.utils.yaml_read(CURR_DIR+"/config.ocha")['config']
             app_name = config_data['app']['name']
             listsdir = modul_utils.utils.list_dir(CURR_DIR+"/moduls/")
-            deploy_data = modul_utils.utils.yaml_read(CURR_DIR+"/.deploy/deploy.ocha")
-            host = deploy_data['ip']
-            username = deploy_data['username']
-            key = CURR_DIR+"/.deploy/ssh_key.pem"
+            file = None
 
-            ssh = scp_utils.ssh_connect(host, username, key_filename=key)
-            ssh.get_transport().is_active()
-            ftp_client= ssh.open_sftp()
-            for i in listsdir:
-                scp_utils.sync_file(ftp_client,i['file'], "/home/"+username+"/"+i['index'])
-            ftp_client.close()
-            for command in listsdir:
-                ssh.exec_command("sudo cp /home/"+username+"/"+command['index']+" /root/BLESS/"+app_name+"/app/moduls/")
-            ssh.close()
+            if self.args['--file']:
+                file = self.args['--file']
 
+            if self.args['--service'] == 'neo':
+                if not modul_utils.utils.read_file(CURR_DIR+"/.deploy/deploy.ocha"):
+                    print("REPORT: Your Neo Service Not Activate")
+                    exit()
+                deploy_data = modul_utils.utils.yaml_read(CURR_DIR+"/.deploy/deploy.ocha")
+                host = deploy_data['ip']
+                username = deploy_data['username']
+                key = CURR_DIR+"/.deploy/ssh_key.pem"
+                ssh = scp_utils.ssh_connect(host, username, key_filename=key)
+                ssh.get_transport().is_active()
+                ftp_client= ssh.open_sftp()
+                # check file
+                if file:
+                    print("REPORT: Syncs "+file+" To Neo Service")
+                    scp_utils.sync_file(ftp_client,file, "/home/"+username+"/"+file)
+                    ftp_client.close()
+                    ssh.exec_command("mv /home/"+username+"/"+file+" /home/"+username+"/BLESS/"+app_name+"/app/moduls/")
+                else:
+                    print("REPORT: Syncs All Moduls To Neo Service")
+                    for i in listsdir:
+                        scp_utils.sync_file(ftp_client,i['file'], "/home/"+username+"/"+i['index'])
+                    ftp_client.close()
+                    for command in listsdir:
+                        ssh.exec_command("mv /home/"+username+"/"+command['index']+" /home/"+username+"/BLESS/"+app_name+"/app/moduls/")
+                ssh.close()
+
+                print("REPORT: After sync moduls then build your endpoint in neo service")
+                exit()
+
+            print("REPORT: Sync Moduls Locals")
+            if not modul_utils.utils.read_file(CURR_DIR+"/.deploy/build.ocha"):
+                print("ERROR: To Sync Your Moduls Build Now")
+                exit()
+            build_data = modul_utils.utils.yaml_read(CURR_DIR+"/.deploy/build.ocha")
+            build_path = build_data['build_path']
+            build_path = build_path+"/app/"
+            if file:
+                modul_utils.utils.copyfile(file, build_path+"/"+file)
+                exit()
+            if modul_utils.utils.check_folder(build_path+"/moduls"):
+                modul_utils.utils.remove_folder(build_path+"/moduls")
+            modul_utils.utils.copy(CURR_DIR+"/moduls/", build_path+"/moduls")
+            print("REPORT: Sync Moduls Success")
+            print("REPORT: After sync moduls then build your endpoint")
             exit()

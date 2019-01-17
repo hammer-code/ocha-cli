@@ -1,6 +1,7 @@
 from bless.clis.base import Base
 from bless.libs import build_utils
 from bless.libs import database
+from bless.libs import parsing_utils
 import os
 
 
@@ -11,14 +12,15 @@ class Build(Base):
         usage:
             build [-m | --moduls]
             build database [-f File]
-            build endpoint [-f File]
+            build endpoint [-s SERVICE]
 
         Build Project
 
         Options:
-        -h --help                 Print usage
-        -m --moduls               Sync Moduls
-        -f file --file=FILE       sequence execute object
+        -h --help                                   Print usage
+        -m --moduls                                 Sync Moduls
+        -s service --service=SERVICE                Sync Moduls
+        -f file --file=FILE                         sequence execute object
     """
 
     def execute(self):
@@ -33,10 +35,28 @@ class Build(Base):
             exit()
 
         if self.args['endpoint']:
+            endpoint_data = build_utils.utils.yaml_read("endpoint.ocha")['endpoint']
             config = build_utils.utils.yaml_read("config.ocha")['config']
-            file = self.args['--file']
+            build_data = build_utils.utils.yaml_read(CURR_DIR+"/.deploy/build.ocha")
+            app_path = build_data['build_path']
+            if not build_utils.utils.check_folder(app_path):
+                print("FAILED: Build Your App Now")
+                exit()
+            if build_utils.utils.read_file(app_path+"/app/static/templates/endpoint.yml"):
+                os.remove(app_path+"/app/static/templates/endpoint.yml")
+            parsing_utils.set_endpoint_template(endpoint_data, app_path)
+            security = None
+            for i in endpoint_data:
+                try:
+                    security = endpoint_data[i]['auth']
+                except Exception:
+                    security = None
+                if build_utils.utils.read_file(app_path+"/app/controllers/api/"+i+".py"):
+                    os.remove(app_path+"/app/controllers/api/"+i+".py")
+                parsing_utils.create_file_controller(i, app_path, security)
+            parsing_utils.create_routing(endpoint_data, app_path)
             exit()
-            
+
         init_create = dict()
         init_yml = dict()
         init_file = None
