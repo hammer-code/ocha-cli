@@ -11,6 +11,13 @@ APP_HOME = os.path.expanduser("~")
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
+def report(head, value=None):
+    print("###############################################")
+    print(head)
+    print("###############################################")
+    print(value)
+    print("###############################################")
+
 def check_keys(obj, keys):
     chek = None
     try:

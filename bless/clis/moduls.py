@@ -81,13 +81,13 @@ class Moduls(Base):
                 # check file
                 if file:
                     print("REPORT: Syncs "+file+" To Neo Service")
-                    scp_utils.sync_file(ftp_client,file, "/home/"+username+"/"+file)
+                    scp_utils.sync_file(ftp_client,file, "/home/"+username+"/"+app_name+"/"+file)
                     ftp_client.close()
                     ssh.exec_command("mv /home/"+username+"/"+file+" /home/"+username+"/BLESS/"+app_name+"/app/moduls/")
                 else:
                     print("REPORT: Syncs All Moduls To Neo Service")
                     for i in listsdir:
-                        scp_utils.sync_file(ftp_client,i['file'], "/home/"+username+"/"+i['index'])
+                        scp_utils.sync_file(ftp_client,i['file'], "/home/"+username+"/"+app_name+"/moduls/"+i['index'])
                     ftp_client.close()
                     for command in listsdir:
                         ssh.exec_command("mv /home/"+username+"/"+command['index']+" /home/"+username+"/BLESS/"+app_name+"/app/moduls/")
