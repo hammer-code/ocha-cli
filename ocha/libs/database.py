@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import os
-from bless.libs import utils
+from ocha.libs import utils
 from passlib.hash import pbkdf2_sha256
 
 def check_db(qry, db, db_name):
@@ -124,7 +124,7 @@ def database_parse(config, obj_database, security = None, auth_config= None):
     if security:
         # inserting admin user
         admin_userdata = {
-            'firs_tname': auth_config['user'],
+            'first_name': auth_config['user'],
             'last_name': auth_config['user'],
             'location': '',
             'email': auth_config['admin'],

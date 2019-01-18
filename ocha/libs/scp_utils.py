@@ -1,6 +1,6 @@
 import paramiko
 import os
-from bless.libs import utils
+from ocha.libs import utils
 
 CURR_DIR = os.getcwd()
 

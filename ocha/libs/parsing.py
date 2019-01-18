@@ -1,6 +1,6 @@
-from bless.libs import database
-from bless.libs import parsing_utils
-from bless.libs import utils
+from ocha.libs import database
+from ocha.libs import parsing_utils
+from ocha.libs import utils
 from .setting import database_setting
 from os import rename, remove, getcwd
 
@@ -86,8 +86,8 @@ def initialize(file=None, path=None, sync_md=None):
                                 parsing_utils.create_moduls(nm_moduls,modules_data, CURR_DIR, sync_md=True)
                         nm_modul = nm_moduls
     if listdir:
-        print("FAILED: Moduls Folder Not Empty")
-        print("REPORT: Run 'ocha moduls create' to generate moduls for locals project")
+        parsing_utils.utils.report("FAILED", "Moduls Folder Not Empty")
+        parsing_utils.utils.report("REPORT", "Run 'ocha moduls create' to generate moduls for locals project")
     # database setup
     config_database = obj_data['config']['database']
     auth_config = obj_data['auth']

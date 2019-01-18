@@ -1,5 +1,5 @@
-from bless.clis.base import Base
-from bless.libs import deploy_utils, scp_utils
+from ocha.clis.base import Base
+from ocha.libs import deploy_utils, scp_utils
 import os , time
 
 
@@ -23,20 +23,20 @@ class Deploy(Base):
 
     def execute(self):
         if self.args['docker']:
-            bless_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/bless.ocha")
-            deploy_utils.docker_deploy(bless_object, CURR_DIR)
+            ocha_object = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/ocha.ocha")
+            deploy_utils.docker_deploy(ocha_object, CURR_DIR)
 
         if self.args['neo']:
-            bless_config = deploy_utils.utils.yaml_read(CURR_DIR+"/config.ocha")
+            ocha_config = deploy_utils.utils.yaml_read(CURR_DIR+"/config.ocha")
             if deploy_utils.utils.read_file(CURR_DIR+"/.deploy/deploy.ocha"):
                 deploy_data = deploy_utils.utils.yaml_read(CURR_DIR+"/.deploy/deploy.ocha")
                 id_vm = deploy_data['id_vm']
                 data = deploy_utils.check_neo_service(id_vm)
                 if data is not None:
-                    print("WARNING: Your Neo Service Is Ready | Run: bless modul sync to sync local project on neo service")
+                    print("WARNING: Your Neo Service Is Ready | Run: ocha modul sync to sync local project on neo service")
                     exit()
 
-            respon = deploy_utils.neo_deploy_new(bless_config)
+            respon = deploy_utils.neo_deploy_new(ocha_config)
             data_vm = dict()
             data_project = dict()
             pemkey=""
@@ -85,7 +85,7 @@ class Deploy(Base):
             print("-- DEPLOYING SYSTEM A FEW MINUTE ! RELAXING --")
             print("###############################################")
             time.sleep(120)
-            # app_name="bless_test01"
+            # app_name="ocha_test01"
             # username = "sofyan"
             # host = "103.93.53.106"
             project_archive = CURR_DIR+"/."+str(app_name)+".zip"
@@ -101,7 +101,7 @@ class Deploy(Base):
             ssh.exec_command("mkdir "+app_name)
             ssh.exec_command("mv project.zip "+app_name+"/"+app_name+".zip")
             ssh.exec_command("cd "+app_name+"; unzip "+app_name+".zip; rm "+app_name+".zip")
-            _,stdout,_ = ssh.exec_command("cd "+app_name+"; bless build;")
+            _,stdout,_ = ssh.exec_command("cd "+app_name+"; ocha build;")
             report = stdout.read().decode("utf8")
             print(report)
             print("###############################################")

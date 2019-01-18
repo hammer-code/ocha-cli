@@ -1,7 +1,8 @@
-from bless.clis.base import Base
-from bless.libs import build_utils
-from bless.libs import database
-from bless.libs import parsing_utils
+from ocha.clis.base import Base
+from ocha.libs import build_utils
+from ocha.libs import database
+from ocha.libs import parsing_utils
+from ocha.libs import scp_utils
 import os
 
 
@@ -35,6 +36,31 @@ class Build(Base):
             exit()
 
         if self.args['endpoint']:
+            if self.args['--service']=='neo':
+                config = build_utils.utils.yaml_read("config.ocha")['config']
+                app_name = config['app']['name']
+                if not build_utils.utils.read_file(CURR_DIR+"/.deploy/deploy.ocha"):
+                    build_utils.utils.report("WARNING", "Your Neo Serice Not Activate")
+                    exit()
+                endpoint_file = CURR_DIR+"/endpoint.ocha"
+                deploy_data = build_utils.utils.yaml_read(CURR_DIR+"/.deploy/deploy.ocha")
+                host = deploy_data['ip']
+                username = deploy_data['username']
+                key = CURR_DIR+"/.deploy/ssh_key.pem"
+                ssh = scp_utils.ssh_connect(host, username, key_filename=key)
+                ssh.get_transport().is_active()
+                ftp_client= ssh.open_sftp()
+                scp_utils.sync_file(endpoint_file,file, "/home/"+username+"/"+app_name+"/endpoint.ocha")
+                ftp_client.close()
+                _,stdout,_ = ssh.exec_command("cd /home/"+username+"/"+app_name+"; ocha build endpoint")
+                status = stdout.read().decode("utf8")
+                print("###############################################")
+                print("######### SYNC ENDPOINT TO NEO SERVICE ########")
+                print("###############################################")
+                print(status)
+                print("###############################################")
+                ssh.close()
+                exit()
             endpoint_data = build_utils.utils.yaml_read("endpoint.ocha")['endpoint']
             config = build_utils.utils.yaml_read("config.ocha")['config']
             build_data = build_utils.utils.yaml_read(CURR_DIR+"/.deploy/build.ocha")

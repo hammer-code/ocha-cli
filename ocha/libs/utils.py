@@ -11,6 +11,13 @@ APP_HOME = os.path.expanduser("~")
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
+def report(head, value=None):
+    print("###############################################")
+    print(head)
+    print("###############################################")
+    print(value)
+    print("###############################################")
+
 def check_keys(obj, keys):
     chek = None
     try:
@@ -150,23 +157,23 @@ def read_value(file):
 
 # for login deploy
 def check_env():
-    return os.path.isfile("{}/.bless.env".format(APP_HOME))
+    return os.path.isfile("{}/.ocha.env".format(APP_HOME))
 
 
 def load_env_file():
-    return load_dotenv("{}/.bless.env".format(APP_HOME), override=True)
+    return load_dotenv("{}/.ocha.env".format(APP_HOME), override=True)
 
 def get_env_values():
     if check_env():
         load_env_file()
-        bless_env = {}
-        bless_env['username'] = os.environ.get('OS_USERNAME')
-        bless_env['password'] = os.environ.get('OS_PASSWORD')
-        bless_env['project_url'] = os.environ.get('OS_PROJECT_URL')
-        bless_env['project_port'] = os.environ.get('OS_PROJECT_PORT')
-        return bless_env
+        ocha_env = {}
+        ocha_env['username'] = os.environ.get('OS_USERNAME')
+        ocha_env['password'] = os.environ.get('OS_PASSWORD')
+        ocha_env['project_url'] = os.environ.get('OS_PROJECT_URL')
+        ocha_env['project_port'] = os.environ.get('OS_PROJECT_PORT')
+        return ocha_env
     else:
-        print("Can't find bless.env")
+        print("Can't find ocha.env")
 
 def send_http(url, data = None, headers=None):
     send = requests.post(url, json=data, headers=headers)

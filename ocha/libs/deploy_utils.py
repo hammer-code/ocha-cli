@@ -1,6 +1,6 @@
 import docker, requests
 from passlib.hash import pbkdf2_sha256
-from bless.libs import utils
+from ocha.libs import utils
 from getpass import getpass
 
 
@@ -16,8 +16,8 @@ def check_image(app_name):
        return img_chek
 
 
-def docker_deploy(bless_object, app_path):
-    app_name = bless_object['config']['app']['name']
+def docker_deploy(ocha_object, app_path):
+    app_name = ocha_object['config']['app']['name']
     img_data = check_image(app_name)
     if img_data:
         client.images.remove(image=app_name)
@@ -48,7 +48,7 @@ def check_neo_service(id_vm):
     else:
         return data_vm
 
-def neo_deploy_new(bless_object):
+def neo_deploy_new(ocha_object):
     env_data = utils.get_env_values()
     password = getpass("Your Neo Password: ")
     password_unhash = pbkdf2_sha256.verify(password, env_data['password'])
@@ -64,8 +64,8 @@ def neo_deploy_new(bless_object):
     headers = {
         "Access-Token": auth
     }
-    app_name = bless_object['config']['app']['name']
-    app_port = bless_object['config']['app']['port']
+    app_name = ocha_object['config']['app']['name']
+    app_port = ocha_object['config']['app']['port']
     username = env_data['username']
     username = username.split("@")[0]
     send_to_openstack={
@@ -78,7 +78,7 @@ def neo_deploy_new(bless_object):
                     "key_name": "vm-key",
                     "username": username
                 },
-                "template": "bless"
+                "template": "ocha"
             }
         }
     }
@@ -111,7 +111,7 @@ def neo_deploy_new(bless_object):
 
 
 # Deploying in neo service
-def neo_deploy(bless_object, app_path):
+def neo_deploy(ocha_object, app_path):
     env_data = utils.get_env_values()
     password = getpass("Your Neo Password: ")
     password_unhash = pbkdf2_sha256.verify(password, env_data['password'])
@@ -125,14 +125,14 @@ def neo_deploy(bless_object, app_path):
         url_login = head_url+"/api/sign"
         auth = utils.sign_to_project(url_login,env_data['username'], password) 
     auth = auth['data']['token']
-    files = {'bless_file': open(app_path+"/.deploy/bless.ocha",'rb')}
+    files = {'ocha_file': open(app_path+"/.deploy/ocha.ocha",'rb')}
 
     headers = {
         "Authorization": auth
     }
     values = {
-        'app_name': bless_object['config']['app']['name'],
-        'app_port': bless_object['config']['app']['port'],
+        'app_name': ocha_object['config']['app']['name'],
+        'app_port': ocha_object['config']['app']['port'],
         'username': env_data['username'],
     }
 

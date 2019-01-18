@@ -1,5 +1,5 @@
-from bless.clis.base import Base
-from bless.libs import login_utils
+from ocha.clis.base import Base
+from ocha.libs import login_utils
 import os
 
 

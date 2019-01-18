@@ -1,5 +1,5 @@
 from passlib.hash import pbkdf2_sha256
-from bless.libs import utils
+from ocha.libs import utils
 import os, docker
 
 APP_HOME = utils.APP_HOME
@@ -16,7 +16,7 @@ def create_env_file(username, password, auth_url = None, port = None):
         port_a = DEFAULT_PORT
 
     try:
-        env_file = open("{}/.bless.env".format(APP_HOME), "w+")
+        env_file = open("{}/.ocha.env".format(APP_HOME), "w+")
         env_file.write("OS_USERNAME=%s\n" % username)
         env_file.write("OS_PASSWORD=%s\n" % password)
         env_file.write("OS_PROJECT_URL=%s\n" % url_a)
@@ -29,11 +29,11 @@ def create_env_file(username, password, auth_url = None, port = None):
 
 
 def login_neo(username, password, auth_url = None, port=None):
-    if os.path.exists(APP_HOME+"/.bless.env"):
+    if os.path.exists(APP_HOME+"/.ocha.env"):
         print("Environment Exists Do You remove :")
         checks = input("Y/N")
         if checks == 'Y' or checks == 'y':
-            os.remove(APP_HOME+"/.bless.env")
+            os.remove(APP_HOME+"/.ocha.env")
             create_env_file(username, password, auth_url, port)
         else:
             env = utils.get_env_values()
@@ -52,8 +52,8 @@ def login_docker():
 
 
 def logout():
-    if os.path.exists(APP_HOME+"/.bless.env"):
-        os.remove(APP_HOME+"/.bless.env")
+    if os.path.exists(APP_HOME+"/.ocha.env"):
+        os.remove(APP_HOME+"/.ocha.env")
     else:
         print("Not Current Sessions")
 

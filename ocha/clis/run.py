@@ -1,5 +1,5 @@
-from bless.clis.base import Base
-from bless.libs import run_utils, scp_utils
+from ocha.clis.base import Base
+from ocha.libs import run_utils, scp_utils
 import os
 
 
@@ -33,7 +33,7 @@ class Run(Base):
             if self.args['--action'] == 'start':
                 ssh = scp_utils.ssh_connect(host, username, key_filename=key)
                 ssh.get_transport().is_active()
-                _,stdout,_ = ssh.exec_command("cd "+app_name+"; bless run;")
+                _,stdout,_ = ssh.exec_command("cd "+app_name+"; ocha run;")
                 status = stdout.read().decode("utf8")
                 print("###################################################")
                 print("REPORT: Neo Service Started")

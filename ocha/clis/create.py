@@ -1,6 +1,6 @@
-from bless.clis.base import Base
-from bless.libs import parsing as parse
-from bless.libs import create_utils
+from ocha.clis.base import Base
+from ocha.libs import parsing as parse
+from ocha.libs import create_utils
 import os, json
 
 
@@ -31,7 +31,7 @@ class Create(Base):
 
     def execute(self):
         internet = create_utils.utils.check_internet()
-        url_bless_object = "https://raw.githubusercontent.com/Blesproject/bless_object/master/"
+        url_ocha_object = "https://raw.githubusercontent.com/Blesproject/bless_object/master/"
         if self.args['database']:
             check_yml = create_utils.utils.read_file(CURR_DIR+"/database.ocha")
             if not check_yml:
@@ -89,7 +89,7 @@ class Create(Base):
                         }
                     }
                 else:
-                    value = create_utils.utils.download(url_bless_object+"database.ocha")
+                    value = create_utils.utils.download(url_ocha_object+"database.ocha")
                     value = value.read().decode('utf-8')
                 file = create_utils.utils.yaml_create(value,CURR_DIR+"/database.ocha")
             exit()
@@ -99,7 +99,7 @@ class Create(Base):
                 if not internet:
                     value = ""
                 else:
-                    value = create_utils.utils.download(url_bless_object+"auth.ocha")
+                    value = create_utils.utils.download(url_ocha_object+"auth.ocha")
                     value = value.read().decode('utf-8')
                 file = create_utils.utils.yaml_create(value,CURR_DIR+"/auth.ocha")
             exit()
@@ -109,7 +109,7 @@ class Create(Base):
                 if not internet:
                     value = ""
                 else:
-                    value = create_utils.utils.download(url_bless_object+"config.ocha")
+                    value = create_utils.utils.download(url_ocha_object+"config.ocha")
                     value = value.read().decode('utf-8')
                 file = create_utils.utils.yaml_create(value,CURR_DIR+"/config.ocha")
             exit()
@@ -120,7 +120,7 @@ class Create(Base):
                 if not internet:
                     value = ""
                 else:
-                    value = create_utils.utils.download(url_bless_object+"endpoint.ocha")
+                    value = create_utils.utils.download(url_ocha_object+"endpoint.ocha")
                     value = value.read().decode('utf-8')
                 file = create_utils.utils.yaml_create(value,CURR_DIR+"/endpoint.ocha")
             exit()
@@ -199,6 +199,6 @@ class Create(Base):
                         }
                     }
             else:
-                value = create_utils.utils.download(url_bless_object+"/"+i+".ocha")
+                value = create_utils.utils.download(url_ocha_object+"/"+i+".ocha")
                 value_fix = value.read().decode('utf-8')
             file = create_utils.utils.create_file(i+".ocha",CURR_DIR,value_fix)

@@ -1,5 +1,5 @@
-from bless.clis.base import Base
-from bless.libs import parsing as parse
+from ocha.clis.base import Base
+from ocha.libs import parsing as parse
 import os
 
 class Generate(Base): 
@@ -14,7 +14,7 @@ class Generate(Base):
 
         Options:
         -h --help                             Print usage
-        -f file --file=FILE                   Build bless object to microservice
+        -f file --file=FILE                   Build ocha object to microservice
         -p path --path=PATH                   Build to own path
     """
 
