@@ -1,77 +1,7 @@
-auth:
-  user: admin
-  password: admin #change your password after create your app
-  email: admin@admin.com 
+# MODULS
 
-config:
-  database:
-    host: localhost
-    port: 26257
-    username: root
-    name: bless_test01
-    ssl: disable
-  app:
-    host: 0.0.0.0
-    name : bless_test01
-    framework: flask
-    port: 6969
-    worker: 2
-    environment: production
-  redis:
-    host: 127.0.0.1
-    password: pass
-    port: 6379
-
-database:
-  tables :
-    # default table
-    tb_userdata:
-      id_userdata:
-        type: serial
-        notNull: True
-        primaryKey: True
-      first_name:
-        type: varchar
-        notNull: True
-      last_name:
-        type: varchar
-        notNull: True
-      location:
-        type: varchar
-      email:
-        type: varchar
-        unique: True
-
-    tb_user:
-      id_user:
-        type: serial
-        notNull: True
-        primaryKey: True
-      id_userdata:
-        type: int
-        notNull: True
-        foreignKey:
-          reference: tb_userdata
-          field: id_userdata
-          on_delete: cascade
-          on_update: cascade
-      username:
-        type: varchar
-        unique: True
-      password:
-        type: varchar
-    # default table end
-
-    point_test:
-      id_pointest:
-        type: serial
-        notNull: True
-        primaryKey: True
-      nm_pointest:
-        type: varchar
-      value_pointest:
-        type: varchar
-
+## Endpoint example
+```
 endpoint:
   point_test:
     auth: False
@@ -146,3 +76,4 @@ endpoint:
           parameters:
             table : point_test
             fields: $fields
+```
