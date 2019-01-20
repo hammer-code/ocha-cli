@@ -51,10 +51,11 @@ def database_setting(config):
         try:
             db.execute("SHOW TABLES")
         except (Exception, psycopg2.DatabaseError) as e:
-            print("DATABASE: ", e)
+            utils.log_err(e)
+    
         else:
             data = db.fetchall()
-            print("removing tables")
+            utils.log_warn("Remove All Tables")
             for i in data:
                 qry = None
                 qry = "DROP TABLE "+i[0]
@@ -67,7 +68,7 @@ def database_setting(config):
         try:
             db.execute("CREATE DATABASE "+config['name'])
         except (Exception, psycopg2.DatabaseError) as e:
-            print("DATABASE: ", e)
+            utils.log_err(e)
             db_check = True
 
         if db_check:
@@ -83,10 +84,11 @@ def database_setting(config):
             try:
                 db.execute("SHOW TABLES")
             except (Exception, psycopg2.DatabaseError) as e:
-                print("DATABASE: ", e)
+                utils.log_err(e)
             else:
                 data = db.fetchall()
-                print("WARNING: Removing All Tables")
+                utils.log_warn("Remove All Tables")
+
                 for i in data:
                     qry = None
                     qry = "DROP TABLE "+i[0]

@@ -1,6 +1,6 @@
-# BLESS GENERATOR
+# BLESS OCHA GENERATOR
 
-Welcome To Bless microservice generator
+Welcome To Bless ocha microservice generator
 
 ## Install
 

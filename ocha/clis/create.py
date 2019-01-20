@@ -127,17 +127,8 @@ class Create(Base):
         all_project = ['database','auth','config','endpoint']
         
         if create_utils.utils.list_dir(CURR_DIR):
-            print("Warning: Folder Not Empty | Create Project For Empty Directory")
+            create_utils.utils.log_warn("Create Project For Empty Directory")
             exit()
-            # listdir_new = list()
-            # file = create_utils.utils.list_dir(CURR_DIR)
-            # listdir = create_utils.utils.yaml_read(CURR_DIR+"/.deploy/listdir.ocha")
-            # for c_file in file:
-            #     if c_file in listdir:
-            #         listdir_new.append(c_file)
-            #     else:
-            #        listdir_new.append(c_file)
-            # print(listdir_new)
         if not create_utils.utils.check_folder(CURR_DIR+"/moduls"):
             create_utils.utils.create_folder(CURR_DIR+"/moduls")
 
@@ -202,3 +193,4 @@ class Create(Base):
                 value = create_utils.utils.download(url_ocha_object+"/"+i+".ocha")
                 value_fix = value.read().decode('utf-8')
             file = create_utils.utils.create_file(i+".ocha",CURR_DIR,value_fix)
+        create_utils.utils.report("Project Created")

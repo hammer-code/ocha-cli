@@ -33,6 +33,7 @@ class Build(Base):
             if config['host'] == "localhost" or config['host'] == "127.0.0.1":
                 database.database_parse(config, database_obj,
                                             security = None, auth_config = None)
+            build_utils.utils.report("Database Build")
             exit()
 
         if self.args['endpoint']:
@@ -54,11 +55,8 @@ class Build(Base):
                 ftp_client.close()
                 _,stdout,_ = ssh.exec_command("cd /home/"+username+"/"+app_name+"; ocha build endpoint")
                 status = stdout.read().decode("utf8")
-                print("###############################################")
-                print("######### SYNC ENDPOINT TO NEO SERVICE ########")
-                print("###############################################")
-                print(status)
-                print("###############################################")
+                build_utils.utils.report("SYNC ENDPOINT TO NEO SERVICE")
+                build_utils.utils.log_warn(status)
                 ssh.close()
                 exit()
             endpoint_data = build_utils.utils.yaml_read("endpoint.ocha")['endpoint']
@@ -66,7 +64,7 @@ class Build(Base):
             build_data = build_utils.utils.yaml_read(CURR_DIR+"/.deploy/build.ocha")
             app_path = build_data['build_path']
             if not build_utils.utils.check_folder(app_path):
-                print("FAILED: Build Your App Now")
+                build_utils.utils.log_err("Failed Build Your App Now")
                 exit()
             if build_utils.utils.read_file(app_path+"/app/static/templates/endpoint.yml"):
                 os.remove(app_path+"/app/static/templates/endpoint.yml")
