@@ -10,16 +10,23 @@ CURR_DIR = getcwd()
 def initialize(file=None, path=None, sync_md=None):
     obj_data = utils.yaml_read(file)
     # Create APP
-    app_name =  obj_data['config']['app']['name']
-    app_framework =  obj_data['config']['app']['framework']
+    # app_name =  obj_data['config']['app']['name']
+    # app_framework =  obj_data['config']['app']['framework']
+    app_name =  parsing_utils.utils.check_keys(obj_data['config']['app'],"name")
+    app_framework = parsing_utils.utils.check_keys(obj_data['config']['app'],"framework")
     app_path = utils.read_app(app_name, path=path)
 
     if not utils.read_app(app_name, path=path):
         create_app = parsing_utils.create_app(app_name, app_framework, path=path)
+        if create_app:
+            parsing_utils.utils.report("APP Created")
     else:
-        path_rm = app_path
-        utils.remove_folder(path_rm)
-        create_app = parsing_utils.create_app(app_name, app_framework, path=path)
+        question = parsing_utils.utils.question("Rebuilding")
+        if question:
+            path_rm = app_path
+            utils.remove_folder(path_rm)
+            create_app = parsing_utils.create_app(app_name, app_framework, path=path)
+        exit()
 
     # Set App Constructor
     app_path = utils.read_app(app_name, path=path)
@@ -28,6 +35,7 @@ def initialize(file=None, path=None, sync_md=None):
         driver_var = obj_data['config']['database']['driver']
     except Exception:
         driver_var = None
+        parsing_utils.utils.report("Using Default Driver | Cockroachdb")
 
     if driver_var:
         driver_setting = database_setting['driver'][driver_var]

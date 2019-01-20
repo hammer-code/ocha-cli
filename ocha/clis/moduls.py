@@ -6,6 +6,8 @@ import os
 
 
 CURR_DIR = os.getcwd()
+URLS_MODULS = "https://github.com/Blesproject/ocha_moduls.git"
+
 
 class Moduls(Base):
     """
@@ -32,8 +34,8 @@ class Moduls(Base):
             check_file = modul_utils.utils.list_dir(CURR_DIR+"/moduls/")
             print(len(check_file))
             if len(check_file) > 0:
-                print("Warning: Moduls Not Empty, All Modules Will Be Removed If Agree ")
-                person_agre = input("Press |Y| If Agree : ")
+                modul_utils.utils.log_warn("Moduls Not Empty, All Modules Will Be Removed If Agree")
+                person_agre = modul_utils.utils.question("If Agree and Not Agree : ")
                 if person_agre == "Y" or person_agre == "y":
                     modul_utils.utils.remove_folder(CURR_DIR+"/moduls/")
                     modul_utils.utils.create_folder(CURR_DIR+"/moduls/")
@@ -48,17 +50,16 @@ class Moduls(Base):
 
             if self.args['--libs']:
                 if modul_utils.utils.check_folder(CURR_DIR+"/moduls/app"):
-                    modul_utils.utils.report("WARNING", "Library Exist")
+                    modul_utils.utils.log_warn("Library Exist")
                     exit()
-                
-                url = "https://github.com/Blesproject/ocha_moduls.git"
+                url = URLS_MODULS
                 git = modul_utils.utils.template_git(url, CURR_DIR+"/moduls/")
                 if not git:
-                    modul_utils.utils.report("FAILED", "Check Your Internet Connection")
+                    modul_utils.utils.log_err("Check Your Internet Connection")
                     exit()
                 os.remove(CURR_DIR+"/moduls/.gitignore")
                 modul_utils.utils.remove_folder(CURR_DIR+"/moduls/.git")
-                modul_utils.utils.report("REPORT", "Library Run Moduls In Project Success Installed")
+                modul_utils.utils.report("Library Run Moduls In Project Success Installed")
             for key_i in endpoint_data:
                 for end_i in endpoint_data[key_i]:
                     modules_data = None
@@ -86,7 +87,7 @@ class Moduls(Base):
 
             if self.args['--service'] == 'neo':
                 if not modul_utils.utils.read_file(CURR_DIR+"/.deploy/deploy.ocha"):
-                    print("REPORT: Your Neo Service Not Activate")
+                    modul_utils.utils.log_err("Your Neo Service Not Activate")
                     exit()
                 deploy_data = modul_utils.utils.yaml_read(CURR_DIR+"/.deploy/deploy.ocha")
                 host = deploy_data['ip']
@@ -97,12 +98,12 @@ class Moduls(Base):
                 ftp_client= ssh.open_sftp()
                 # check file
                 if file:
-                    print("REPORT: Syncs "+file+" To Neo Service")
+                    modul_utils.utils.report("Syncs "+file+" To Neo Service")
                     scp_utils.sync_file(ftp_client,file, "/home/"+username+"/"+app_name+"/"+file)
                     ftp_client.close()
                     ssh.exec_command("mv /home/"+username+"/"+file+" /home/"+username+"/BLESS/"+app_name+"/app/moduls/")
                 else:
-                    print("REPORT: Syncs All Moduls To Neo Service")
+                    modul_utils.utils.report("Syncs All Moduls To Neo Service")
                     for i in listsdir:
                         scp_utils.sync_file(ftp_client,i['file'], "/home/"+username+"/"+app_name+"/moduls/"+i['index'])
                     ftp_client.close()
@@ -110,12 +111,12 @@ class Moduls(Base):
                         ssh.exec_command("mv /home/"+username+"/"+command['index']+" /home/"+username+"/BLESS/"+app_name+"/app/moduls/")
                 ssh.close()
 
-                print("REPORT: After sync moduls then build your endpoint in neo service")
+                modul_utils.utils.report("After sync moduls then build your endpoint in neo service")
                 exit()
 
-            print("REPORT: Sync Moduls Locals")
+            modul_utils.utils.report("REPORT", "Sync Moduls Locals")
             if not modul_utils.utils.read_file(CURR_DIR+"/.deploy/build.ocha"):
-                print("ERROR: To Sync Your Moduls Build Now")
+                modul_utils.utils.log_err("To Sync Your Moduls Build Now")
                 exit()
             build_data = modul_utils.utils.yaml_read(CURR_DIR+"/.deploy/build.ocha")
             build_path = build_data['build_path']
@@ -126,6 +127,6 @@ class Moduls(Base):
             if modul_utils.utils.check_folder(build_path+"/moduls"):
                 modul_utils.utils.remove_folder(build_path+"/moduls")
             modul_utils.utils.copy(CURR_DIR+"/moduls/", build_path+"/moduls")
-            print("REPORT: Sync Moduls Success")
-            print("REPORT: After sync moduls then build your endpoint")
+            modul_utils.utils.report("Sync Moduls Success")
+            modul_utils.utils.report("After sync moduls then build your endpoint")
             exit()

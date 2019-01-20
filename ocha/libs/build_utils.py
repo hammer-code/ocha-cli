@@ -34,3 +34,4 @@ def build(path, md_check= None):
     utils.yaml_writeln(run_path,deploy_path+"/build.ocha")
     file = utils.list_dir(path)
     utils.yaml_writeln(file,deploy_path+"/listdir.ocha")
+    utils.report("Build Successfully")

@@ -4,28 +4,53 @@ import shutil
 import git
 import requests
 import zipfile
+import coloredlogs
+import logging
 from dotenv import load_dotenv
 from urllib.request import urlopen
+
 
 APP_HOME = os.path.expanduser("~")
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
-def report(head, value=None):
-    print("###############################################")
-    print(head)
-    print("###############################################")
-    print(value)
-    print("###############################################")
+def question(word):
+    answer = False
+    while answer not in ["y", "n"]:
+        answer = input("{} [y/n]? ".format(word)).lower().strip()
+
+    if answer == "y":
+        answer = True
+    else:
+        answer = False
+    return answer
+
+def report(head = None, value = None):
+    if not value:
+        value = ""
+    coloredlogs.install()
+    logging.info(head+value)
+
+
+def log_warn(stdin):
+    coloredlogs.install()
+    logging.warn(stdin)
+
+
+def log_err(stdin):
+    coloredlogs.install()
+    logging.error(stdin)
+
 
 def check_keys(obj, keys):
     chek = None
     try:
         chek = obj[keys]
     except Exception:
-        return False
+        log_warn(Exception)
+        exit()
     else:
-        return True
+        return chek
 
 
 def template_git(url, dir):
