@@ -108,3 +108,5 @@ venv.bak/
 
 libs/template/*
 example/.deploy/*
+example/.bless_test01.zip
+example/init.ocha
