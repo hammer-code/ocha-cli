@@ -1,71 +1,46 @@
-import yaml
-import os
-import shutil
-import git
-
-APP_HOME = os.path.expanduser("~")
-APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+from ocha.libs import utils
+import os, yaml
+from ocha.libs import setting
 
 
-def check_keys(obj, keys):
-    chek = None
-    try:
-        chek = obj[keys]
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def template_git(url, dir):
-    try:
-        chk_repo = os.path.isdir(dir)
-        if chk_repo:
-            shutil.rmtree(dir)
-        git.Repo.clone_from(url, dir)
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-
-def yaml_parser(file):
-    with open(file, 'r') as stream:
-        try:
-            data = yaml.load(stream)
-            return data
-        except yaml.YAMLError as exc:
-            print(exc)
-
-def copy(src, dest):
-    try:
-        shutil.copytree(src, dest)
-    except OSError as e:
-        print('Directory not copied. Error: %s' % e)
-
-
-def read_file(file):
-    if os.path.isfile(file):
-        return True
-    else:
-        return False
-
-def create_production_env(data_env,app_path):
+def create_production_env(data_env, app_path):
     host = data_env['app']['host']
     port = data_env['app']['port']
     f=open(app_path+"/production.sh", "a+")
-    f.write("gunicorn production:app -b "+str(host)+":"+str(port)+" -w 2")
+    f.write("gunicorn production:app -b "+str(host)+":"+str(port)+" -w 2 --chdir "+app_path+"/")
     f.close()
 
 
 def create_env(data_env, app_path):
+    db_driver = None
+    try:
+        db_driver = data_env['database']['driver']
+    except Exception:
+        db_driver = "cockroachdb"
+
+    env_check = None
+    try:
+        env_check = data_env['app']['environment']
+    except Exception as e:
+        print(e)
+
+    env_sett = ""
+    if env_check:
+        
+        if env_check == 'production':
+            env_sett = "False"
+        else:
+            env_sett = "True"
+
     f=open(app_path+"/.env", "a+")
     # APP CONFIG
     f.write("APP_NAME = "+data_env['app']['name'])
     f.write("\n")
-    f.write("APP_NAME = "+data_env['app']['host'])
+    f.write("APP_HOST = "+data_env['app']['host'])
     f.write("\n")
     f.write("APP_PORT = "+str(data_env['app']['port']))
+    f.write("\n")
+    f.write("FLASK_DEBUG = "+env_sett)
     f.write("\n")
     f.write("\n")
 
@@ -86,6 +61,8 @@ def create_env(data_env, app_path):
     f.write("\n")
     f.write("DB_SSL = "+data_env['database']['ssl'])
     f.write("\n")
+    f.write("DB_DRIVER = "+db_driver)
+    f.write("\n")
     f.write("\n")
     # REDIS CONFIG
     f.write("FLASK_REDIS_URL = redis://:"+data_env['redis']['password']+"@"+str(data_env['redis']['host'])+":"+str(data_env['redis']['port'])+"/0")
@@ -95,7 +72,7 @@ def create_env(data_env, app_path):
     f.close()
 
 
-def create_file_controller(nm_controller, app_path, security):
+def create_file_controller(nm_controller, app_path, security): 
     controller_path = app_path+"/app/controllers/api"
     file_controller_path = controller_path+"/"+nm_controller+".py"
     create_controller(nm_controller,file_controller_path, security)
@@ -132,8 +109,11 @@ class """+nm_ctrl+"""(Resource):
     f.write(value_ctrl)
     f.close()
 
-def read_app(app_name):
-    app_path = APP_HOME+"/BLESS/"+app_name
+def read_app(app_name, path=None):
+    if path is None:
+        app_path = utils.APP_HOME+"/BLESS/"+app_name
+    else:
+        app_path = path+"/"+app_name
     if not os.path.exists(app_path):
         return None
     else:
@@ -151,16 +131,20 @@ def set_endpoint_template(endpoint_obj, app_path):
     f.close()
 
 
-def create_app(app_name, app_framework):
-    flask_path = APP_ROOT+"/template/"+app_framework
-    app_path = APP_HOME+"/BLESS"
-    dst_path = app_path+"/"+app_name
+def create_app(app_name, app_framework, path=None):
     url_git = "https://github.com/Blesproject/bless_"+app_framework+".git"
+    if path is None:
+        app_path = utils.APP_HOME+"/BLESS"
+        dst_path = app_path+"/"+app_name
+    else:
+        app_path = path
+        dst_path = app_path+"/"+app_name
+
     if not os.path.exists(app_path):
         os.makedirs(app_path)
         # copy(flask_path,dst_path)
         try:
-            clone = template_git(url=url_git, dir=dst_path)
+            clone = utils.template_git(url=url_git, dir=dst_path)
         except Exception as e:
             print(str(e))
         else:
@@ -168,7 +152,7 @@ def create_app(app_name, app_framework):
     else:
         # copy(flask_path,dst_path)
         try:
-            clone = template_git(url=url_git, dir=dst_path)
+            clone = utils.template_git(url=url_git, dir=dst_path)
         except Exception as e:
             print(str(e))
         else:
@@ -207,19 +191,22 @@ api.add_resource(UserloginInsert, '/user/add')\n"""
     f.close()
 
 
-def create_moduls(moduls_name, moduls_data, app_path):
+def create_moduls(moduls_name, moduls_data, app_path, sync_md=None):
     import_value = "from app.models import model as db\n\n\n"
-    moduls_path = app_path+"/app/moduls/"
-    file_moduls_path = moduls_path+moduls_name+".py"
+    moduls_path = ""
+    file_moduls_path = ""
+    if sync_md is None:
+        moduls_path = app_path+"/app/moduls/"
+        file_moduls_path = moduls_path+moduls_name+".py"
+    else:
+        moduls_path = app_path+"/moduls/"
+        file_moduls_path = moduls_path+moduls_name+".py"
 
     f=open(file_moduls_path, "a+")
     f.write(import_value)
-    
     function_value = ""
-    print("dr createmoduls nm_moduls",moduls_data)
-    print(moduls_name)
+    utils.report("Moduls "+moduls_name+" Create")
     for i in moduls_data:
-        # print(i)
         if moduls_data[i]['action'] == 'insert':
             function_value += """def """+moduls_data[i]['action']+"""(args):
     # your code here
@@ -288,7 +275,7 @@ def create_moduls(moduls_name, moduls_data, app_path):
                     if dt_types[index] == 'INT':
                         data[a]=str(i[a])
                     else:
-                        data[a]=i[a]
+                        data[a]=str(i[a])
                     index += 1
             respons.append(data)
         return respons\n\n
@@ -320,7 +307,7 @@ def create_moduls(moduls_name, moduls_data, app_path):
                     if dt_types[index] == 'INT':
                         data[a]=str(i[a])
                     else:
-                        data[a]=i[a]
+                        data[a]=str(i[a])
                     index += 1
             respons.append(data)
         return respons\n\n
@@ -334,9 +321,16 @@ def create_moduls(moduls_name, moduls_data, app_path):
     f.write(function_value)
     f.close()
 
-def add_function_moduls(moduls_name, moduls_data, app_path):
-    moduls_path = app_path+"/app/moduls/"
-    file_moduls_path = moduls_path+moduls_name+".py"
+def add_function_moduls(moduls_name, moduls_data, app_path, sync_md = None):
+    moduls_path = ""
+    file_moduls_path = ""
+    if sync_md is None:
+        moduls_path = app_path+"/app/moduls/"
+        file_moduls_path = moduls_path+moduls_name+".py"
+    else:
+        moduls_path = app_path+"/moduls/"
+        file_moduls_path = moduls_path+moduls_name+".py"
+
     with open(file_moduls_path, "a") as myfile:
         function_value = ""
         for i in moduls_data:
@@ -412,7 +406,7 @@ def """+moduls_data[i]['action']+"""(args):
                     if dt_types[index] == 'INT':
                         data[a]=str(i[a])
                     else:
-                        data[a]=i[a]
+                        data[a]=str(i[a])
                     index += 1
             respons.append(data)
         return respons\n\n
@@ -444,7 +438,7 @@ def """+moduls_data[i]['action']+"""(args):
                     if dt_types[index] == 'INT':
                         data[a]=str(i[a])
                     else:
-                        data[a]=i[a]
+                        data[a]=str(i[a])
                     index += 1
             respons.append(data)
         return respons\n\n

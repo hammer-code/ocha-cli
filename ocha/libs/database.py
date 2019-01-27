@@ -1,8 +1,9 @@
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import os
-from bless.libs import utils
+from ocha.libs import utils
 from passlib.hash import pbkdf2_sha256
+from ocha.libs import setting
 
 def check_db(qry, db, db_name):
     db.execute(qry)
@@ -27,7 +28,7 @@ def insert(db,table, data = None):
     else:
         id_of_new_row = db.fetchone()[0]
         return str(id_of_new_row)
-    
+
 
 def database_setting(config):
     conn = psycopg2.connect(
@@ -46,25 +47,87 @@ def database_setting(config):
             port=config['port'],
             host=config['host']
         )
+        db = conn.cursor()
+        conn.set_session(autocommit=True)
+        try:
+            db.execute("SHOW TABLES")
+        except (Exception, psycopg2.DatabaseError) as e:
+            utils.log_err(e)
+    
+        else:
+            data = db.fetchall()
+            utils.log_warn("Remove All Tables")
+            for i in data:
+                qry = None
+                qry = "DROP TABLE "+i[0]
+                try:
+                    db.execute(qry)
+                except (Exception, psycopg2.DatabaseError) as e:
+                    raise e
     else:
+        db_check = None
         try:
             db.execute("CREATE DATABASE "+config['name'])
         except (Exception, psycopg2.DatabaseError) as e:
-            raise e
-        conn = psycopg2.connect(
-            database=config['name'],
-            user=config['username'],
-            sslmode=config['ssl'],
-            port=config['port'],
-            host=config['host']
-        )
+            utils.log_err(e)
+            db_check = True
+
+        if db_check:
+            conn = psycopg2.connect(
+                database=config['name'],
+                user=config['username'],
+                sslmode=config['ssl'],
+                port=config['port'],
+                host=config['host']
+            )
+            db = conn.cursor()
+            conn.set_session(autocommit=True)
+            try:
+                db.execute("SHOW TABLES")
+            except (Exception, psycopg2.DatabaseError) as e:
+                utils.log_err(e)
+            else:
+                data = db.fetchall()
+                utils.log_warn("Remove All Tables")
+
+                for i in data:
+                    qry = None
+                    qry = "DROP TABLE "+i[0]
+                    try:
+                        db.execute(qry)
+                    except (Exception, psycopg2.DatabaseError) as e:
+                        raise e
+        else:
+            conn = psycopg2.connect(
+                database=config['name'],
+                user=config['username'],
+                sslmode=config['ssl'],
+                port=config['port'],
+                host=config['host']
+            )
+
     db = conn.cursor()
     conn.set_session(autocommit=True)
+
     return db
 
-def database_parse(config, obj_database, security, auth_config):
+def database_parse(config, obj_database, security = None, auth_config= None):
     db = database_setting(config)
-    # data_finish = list()
+    # # data_finish = list()
+    if security:
+        df_table = setting.default_table
+        for d_tables in df_table['tables']:
+            config_table = list()
+            for column in df_table['tables'][d_tables]:
+                data_f = {
+                    "column": column,
+                    "rules": df_table['tables'][d_tables][column]
+                }
+                config_table.append(data_f)
+            query = create_table(d_tables, config_table)
+            execute_query(query,db)
+        utils.report("Default Table Created")
+
     for tables in obj_database['tables']:
         config_table = list()
         for column in obj_database['tables'][tables]:
@@ -75,13 +138,14 @@ def database_parse(config, obj_database, security, auth_config):
             config_table.append(data_f)
         query = create_table(tables, config_table)
         execute_query(query,db)
+
     if security:
         # inserting admin user
         admin_userdata = {
-            'firs_tname': auth_config['user'],
+            'first_name': auth_config['user'],
             'last_name': auth_config['user'],
             'location': '',
-            'email': auth_config['admin'],
+            'email': auth_config['email'],
         }
         id_userdata = insert(db,'tb_userdata', admin_userdata)
         if id_userdata:
